@@ -1,6 +1,7 @@
 import React from 'react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import Solitaire from '../components/game/Solitaire';
 
 const Home = () => {
   const backgroundStyle = {
@@ -16,8 +17,10 @@ const Home = () => {
   return (
     <>
       <Header title="Home" bgClass="bg-black" textClass="text-yellow-600" />
-      <div style={backgroundStyle} className="flex flex-col items-center justify-center">
-
+      <div style={backgroundStyle} className="flex flex-col">
+        <div className='flex flex-wrap flex-row mt-[200px]'>
+          <Solitaire/>
+        </div>
       </div>
       <Footer />
     </>

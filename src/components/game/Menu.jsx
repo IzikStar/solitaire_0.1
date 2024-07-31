@@ -5,7 +5,7 @@ import BurgerMenu from '../basic/BurgerMenu';
 const Menu = () => {
     const generateDivs = () => {
         const items = [
-            { icon: <i className="fa-solid fa-gear"></i>, title: 'New Game', onClick: () => {} },
+            { icon: <i className="fa-solid fa-plus"></i>, title: 'New Game', onClick: () => {} },
             { icon: <i className="fa-solid fa-gear"></i>, title: 'Options', onClick: () => {} },
             { icon: <i className="fa-solid fa-plus"></i>, title: 'Add Item', onClick: () => {} },
             { icon: <i className="fa-solid fa-plus"></i>, title: 'Another Item', onClick: () => {} }
