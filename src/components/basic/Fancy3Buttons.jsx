@@ -1,8 +1,8 @@
-import React from 'react'
+import React from 'react';
 
 const Fancy3Buttons = (props) => {
     return (
-        <div className="container1">
+        <div className='button-container'>
             <a className="button" onClick={props.onClick} style={{ '--color': '#1e9bff' }}>
                 <span></span>
                 <span></span>
@@ -25,7 +25,7 @@ const Fancy3Buttons = (props) => {
                 {props.text3}
             </a>
         </div>
-    )
-}
+    );
+};
 
-export default Fancy3Buttons
+export default Fancy3Buttons;

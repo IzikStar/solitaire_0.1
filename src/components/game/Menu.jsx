@@ -1,7 +1,6 @@
 import React from 'react'
 import BurgerMenuItem from '../basic/BurgerMenuItem'
 import BurgerMenu from '../basic/BurgerMenu'
-
 const Menu = () => {
     const generateDivs = () => {
         const divs = []
