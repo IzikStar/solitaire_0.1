@@ -1,0 +1,9 @@
+/* styles.css */
+.background {
+    background-image: url('/images/backGround (1).jpeg');
+    background-size: cover; /* Makes the image cover the whole element */
+    background-position: center; /* Centers the image */
+    background-repeat: no-repeat; /* Prevents the image from repeating */
+    min-height: 100vh; /* Ensures the background covers the full viewport height */
+  }
+  

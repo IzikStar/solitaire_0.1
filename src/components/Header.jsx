@@ -9,9 +9,11 @@ const Header = (props) => {
         <header className={`header ${props.bgClass}`}>
             <nav className='navbar'>
                 <img src='images/logo.jpeg' alt='Logo' />
-                <Fancy3Buttons text1='restart' text2='pause' text3='hint' />
-                {/* <Button name='undo move' />
-                <Button name='deal new' /> */}
+                <Fancy3Buttons text='new game' color='#1e9bff' />
+                <Button icon='undo' />
+                <Button icon='arrow-left' />
+                <Button icon='arrow-right' />
+                <Button icon='lightbulb' />
                 <Menu />
             </nav>
         </header>

@@ -14,8 +14,8 @@ const BurgerMenu = (props) => {
         if (
             menuRef.current &&
             !menuRef.current.contains(event.target) &&
-            event.target.tagName !== 'HTML' &&
-            event.target.tagName !== 'BODY'
+            event.target.tagtitle !== 'HTML' &&
+            event.target.tagtitle !== 'BODY'
         ) {
             setOpen(false);
         }
@@ -33,8 +33,8 @@ const BurgerMenu = (props) => {
         };
     }, [open]);
 
-    const generateButton = (name) => {
-        return <Button name={name} icon={<i className="fa-solid fa-bars"></i>} onClick={toggleMenu} />
+    const generateButton = (title) => {
+        return <Button text={title} icon='bars' onClick={toggleMenu} />
     }
 
     const generateDiv = (divs) => {
@@ -78,7 +78,7 @@ const BurgerMenu = (props) => {
     return (
         <>
             <div id="burger-button">
-                {generateButton(props.name)}
+                {generateButton(props.title)}
             </div>
             {generateDiv(props.divs)}
         </>

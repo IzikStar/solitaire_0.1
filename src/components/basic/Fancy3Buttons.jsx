@@ -2,30 +2,18 @@ import React from 'react';
 
 const Fancy3Buttons = (props) => {
     return (
-        <div className='button-container'>
-            <a className="button" onClick={props.onClick} style={{ '--color': '#1e9bff' }}>
+        <a className="button" onClick={props.onClick} style={{ '--color': `${props.color}` }}>
                 <span></span>
                 <span></span>
                 <span></span>
                 <span></span>
-                {props.text1}
+                {props.text}
             </a>
-            <a className="button" onClick={props.onClick} style={{ "--color": "#ff1867" }}>
-                <span></span>
-                <span></span>
-                <span></span>
-                <span></span>
-                {props.text2}
-            </a>
-            <a className="button" onClick={props.onClick} style={{ "--color": "#6eff3e" }}>
-                <span></span>
-                <span></span>
-                <span></span>
-                <span></span>
-                {props.text3}
-            </a>
-        </div>
     );
 };
 
 export default Fancy3Buttons;
+
+// '#1e9bff'
+// "#ff1867"
+// "#6eff3e"
