@@ -47,7 +47,7 @@ const BurgerMenu = (props) => {
             let right = rect.right - menuWidth;
             let top = rect.bottom;
 
-            
+
             if (top + menuHeight > window.innerHeight) {
                 top = rect.top - menuHeight;
             }

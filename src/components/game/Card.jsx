@@ -1,23 +1,13 @@
-import React, { useState } from 'react';
+import React from 'react';
 
-const Card = ({ image, value, suit, fllipd }) => {
-    const backImage = "https://www.deckofcardsapi.com/static/img/back.png"; // Replace with your own back image URL.
-
-  // useState hook to manage the card flipping state.
-  const [isFlipped, setIsFlipped] = useState(fllipd);
-
-  const handleFlip = () => {
-    setIsFlipped(!isFlipped);
-  };
+const Card = ({ image, value, suit, flipped }) => {
+  const backImage = "https://www.deckofcardsapi.com/static/img/back.png"; // Replace with your own back image URL.
 
   return (
-    <div
-      className="w-24 h-32 cursor-pointer"
-      onClick={handleFlip}
-    >
+    <div className="w-24 h-32 cursor-pointer">
       <img
-        src={isFlipped ? image : backImage}
-        alt={isFlipped ? `${value} of ${suit}` : "Card Back"}
+        src={flipped ? image : backImage}
+        alt={flipped ? `${value} of ${suit}` : "Card Back"}
         className="w-full h-full rounded-md"
       />
     </div>

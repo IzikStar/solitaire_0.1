@@ -5,11 +5,11 @@ import { solitaire } from './Solitaire.js';
 
 const Solitaire = () => {
   const [deckId, setDeckId] = useState(null);
-  const [cards, setCards] = useState([]);
-  const [num, setNum] = useState(solitaire.index);
+  const [closedCards, setClosedCards] = useState([]);
+  const [openCards, setOpenCards] = useState([]);
+  const [index, setIndex] = useState(0);
 
   useEffect(() => {
-    // משיכת חבילת קלפים חדשה
     const fetchDeck = async () => {
       try {
         const response = await fetch(`https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1`);
@@ -22,21 +22,34 @@ const Solitaire = () => {
     };
 
     fetchDeck();
-  }, [solitaire.index]);
+  }, []);
 
-  const drawCards = async (count) => {
-    solitaire.index++;
-    setNum(num + 1)
+  const drawCards = async () => {
     if (!deckId) {
       console.error('No deck ID available. Please fetch a new deck.');
       return;
     }
+
     try {
-      const response = await fetch(`https://deckofcardsapi.com/api/deck/${deckId}/draw/?count=${count}`);
+      // Check if there are open cards and reset if needed
+      if (openCards.length > 0) {
+        setOpenCards([]);
+        setClosedCards([]);
+        setIndex(0);
+      }
+
+      const response = await fetch(`https://deckofcardsapi.com/api/deck/${deckId}/draw/?count=28`);
       const data = await response.json();
-      setCards(data.cards);
+      setClosedCards(data.cards);
     } catch (error) {
       console.error('Error drawing cards:', error);
+    }
+  };
+
+  const revealNextCard = () => {
+    if (index < closedCards.length) {
+      setOpenCards([closedCards[index], ...openCards]);
+      setIndex(index + 1);
     }
   };
 
@@ -44,10 +57,17 @@ const Solitaire = () => {
     <div className='bg-lime-200'>
       <h1>Solitaire</h1>
       <button onClick={() => drawCards(52)}>Draw Cards</button>
-      <div className="cards">
-        {cards.map((card) => (
-            <Card key={card.code + num} image={card.image} value={card.value} suit={card.suit} fllipd={false} />
-        ))}
+      <div className="flex mt-4">
+        <div className="w-24 h-32 cursor-pointer relative" onClick={revealNextCard}>
+          {closedCards.length > 0 && index < closedCards.length ? (
+            <Card flipped={false} />
+          ) : null}
+        </div>
+        <div className="flex ml-4">
+          {openCards.map((card, idx) => (
+            <Card key={card.code + idx} image={card.image} value={card.value} suit={card.suit} flipped={true} />
+          ))}
+        </div>
       </div>
     </div>
   );

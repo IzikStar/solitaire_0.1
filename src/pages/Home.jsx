@@ -1,7 +1,7 @@
 import React from 'react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
-import Solitaire from '../components/game/Solitaire';
+import Solitaire from '../components/game/Solitaire.jsx';
 
 const Home = () => {
   const backgroundStyle = {
@@ -19,7 +19,7 @@ const Home = () => {
       <Header title="Home" bgClass="bg-black" textClass="text-yellow-600" />
       <div style={backgroundStyle} className="flex flex-col">
         <div className='flex flex-wrap flex-row mt-[200px]'>
-          <Solitaire/>
+          <Solitaire />
         </div>
       </div>
       <Footer />
