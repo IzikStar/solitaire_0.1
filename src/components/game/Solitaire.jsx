@@ -24,7 +24,7 @@ const Solitaire = () => {
     fetchDeck();
   }, []);
 
-  const drawCards = async () => {
+  const drawCards = async (count) => {
     if (!deckId) {
       console.error('No deck ID available. Please fetch a new deck.');
       return;
@@ -32,13 +32,19 @@ const Solitaire = () => {
 
     try {
       // Check if there are open cards and reset if needed
+      if (openCards.length == closedCards.length) {
+        setClosedCards(openCards);
+        setClosedCards(closedCards.reverse());
+        setOpenCards([]);
+        setIndex(0);
+      }
       if (openCards.length > 0) {
         setOpenCards([]);
         setClosedCards([]);
         setIndex(0);
       }
 
-      const response = await fetch(`https://deckofcardsapi.com/api/deck/${deckId}/draw/?count=28`);
+      const response = await fetch(`https://deckofcardsapi.com/api/deck/${deckId}/draw/?count=${count}`);
       const data = await response.json();
       setClosedCards(data.cards);
     } catch (error) {
@@ -56,7 +62,7 @@ const Solitaire = () => {
   return (
     <div className='bg-lime-200'>
       <h1>Solitaire</h1>
-      <button onClick={() => drawCards(52)}>Draw Cards</button>
+      <button onClick={() => drawCards(28)}>Draw Cards</button>
       <div className="flex mt-4">
         <div className="w-24 h-32 cursor-pointer relative" onClick={revealNextCard}>
           {closedCards.length > 0 && index < closedCards.length ? (
