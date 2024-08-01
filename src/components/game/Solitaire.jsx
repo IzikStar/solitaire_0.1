@@ -32,21 +32,22 @@ const Solitaire = () => {
 
     try {
       // Check if there are open cards and reset if needed
-      if (openCards.length == closedCards.length) {
-        setClosedCards(openCards);
-        setClosedCards(closedCards.reverse());
+      if (closedCards.length === count) {
+        setClosedCards(openCards.reverse());
+        // setClosedCards(closedCards.);
         setOpenCards([]);
         setIndex(0);
       }
-      if (openCards.length > 0) {
-        setOpenCards([]);
-        setClosedCards([]);
-        setIndex(0);
+      // if (openCards.length > 0) {
+      //   setOpenCards([]);
+      //   setClosedCards([]);
+      //   setIndex(0);
+      // }
+      else if (closedCards.length === 0) {
+        response = await fetch(`https://deckofcardsapi.com/api/deck/${deckId}/draw/?count=${count}`);
+        data = await response.json();
+        setClosedCards(data.cards);
       }
-
-      const response = await fetch(`https://deckofcardsapi.com/api/deck/${deckId}/draw/?count=${count}`);
-      const data = await response.json();
-      setClosedCards(data.cards);
     } catch (error) {
       console.error('Error drawing cards:', error);
     }
@@ -61,7 +62,6 @@ const Solitaire = () => {
 
   return (
     <div className='bg-lime-200'>
-      <h1>Solitaire</h1>
       <button onClick={() => drawCards(28)}>Draw Cards</button>
       <div className="flex mt-4">
         <div className="w-24 h-32 cursor-pointer relative" onClick={revealNextCard}>
@@ -69,9 +69,16 @@ const Solitaire = () => {
             <Card flipped={false} />
           ) : null}
         </div>
-        <div className="flex ml-4">
+        <div className="card-stack">
           {openCards.map((card, idx) => (
-            <Card key={card.code + idx} image={card.image} value={card.value} suit={card.suit} flipped={true} />
+            <div key={card.code + idx} className="card" style={{ zIndex: openCards.length - idx }}>
+              <Card
+                image={card.image}
+                value={card.value}
+                suit={card.suit}
+                flipped={true}
+              />
+            </div>
           ))}
         </div>
       </div>
