@@ -1,88 +1,80 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import './Game.css';
 import Card from './Card';
-import { solitaire } from './Solitaire.js';
+import { solitaire, jackpotNumOfCards } from './Solitaire.js';
+import Jackpot from './Jackpot.jsx';
+import { GameContext } from '../../App.jsx';
+import FinakStacks from './FinakStacks.jsx';
+import GameStacks from './GameStacks.jsx';
 
 const Solitaire = () => {
   const [deckId, setDeckId] = useState(null);
-  const [closedCards, setClosedCards] = useState([]);
-  const [openCards, setOpenCards] = useState([]);
-  const [index, setIndex] = useState(0);
+  const [deck, setDeck] = useState([]);
+  const [jackpotCards, setJackpotCards] = useState([]);
+  const [jackpotLength, setJackpotLength] = useState(jackpotNumOfCards);
 
-  useEffect(() => {
-    const fetchDeck = async () => {
-      try {
-        const response = await fetch(`https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1`);
-        const data = await response.json();
-        setDeckId(data.deck_id);
-        solitaire.deckId = data.deck_id;
-      } catch (error) {
-        console.error('Error fetching deck:', error);
-      }
-    };
+  // const {  } = useContext(GameContext);
 
-    fetchDeck();
-  }, []);
 
-  const drawCards = async (count) => {
-    if (!deckId) {
-      console.error('No deck ID available. Please fetch a new deck.');
-      return;
-    }
-
+  const fetchDeck = async () => {
     try {
-      // Check if there are open cards and reset if needed
-      if (openCards.length === count) {
-        setClosedCards(openCards.reverse());
-        // setClosedCards(closedCards.);
-        setOpenCards([]);
-        setIndex(0);
-      }
-      // if (openCards.length > 0) {
-      //   setOpenCards([]);
-      //   setClosedCards([]);
-      //   setIndex(0);
-      // }
-      else if (closedCards.length === 0) {
-        const response = await fetch(`https://deckofcardsapi.com/api/deck/${deckId}/draw/?count=${count}`);
-        const data = await response.json();
-        setClosedCards(data.cards);
-      }
+      const response = await fetch(`https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1`);
+      const data = await response.json();
+      setDeckId(data.deck_id);
+      solitaire.deckId = data.deck_id;
+      console.log("deckId:", data.deck_id); // Updated to log the correct value
+    } catch (error) {
+      console.error('Error fetching deck:', error);
+    }
+  };
+
+  const drawDeck = async (id) => {
+    try {
+      const response = await fetch(`https://www.deckofcardsapi.com/api/deck/${id}/draw/?count=52`);
+      const data = await response.json();
+      setDeck(data.cards);
+      setJackpotCards(data.cards.slice(0, jackpotNumOfCards));
+      console.log("deck:", data.cards);
+      console.log("jackpotCards:", data.cards.slice(0, jackpotNumOfCards));
     } catch (error) {
       console.error('Error drawing cards:', error);
     }
   };
 
-  const revealNextCard = () => {
-    if (index < closedCards.length) {
-      setOpenCards([closedCards[index], ...openCards]);
-      setIndex(index + 1);
+  useEffect(() => {
+    fetchDeck();
+  }, []);
+
+  useEffect(() => {
+    if (deckId) {
+      drawDeck(deckId);
     }
+  }, [deckId]);
+
+  const handleClick = (card) => {
+    console.log('Clicked card:', card);
+    setJackpotLength(jackpotCards.length);
+    // Implement logic to handle card click
+    // Example: Add card to jackpot or remove from hand
   };
 
   return (
-    <div className='bg-lime-200'>
-      <button onClick={() => drawCards(28)}>Draw Cards</button>
-      <div className="flex mt-4">
-        <div className="w-24 h-32 cursor-pointer relative" onClick={revealNextCard}>
-          {closedCards.length > 0 && index < closedCards.length ? (
-            <Card flipped={false} />
-          ) : null}
-        </div>
-        <div className="card-stack">
-          {openCards.map((card, idx) => (
-            <div key={card.code + idx} className="card" style={{ zIndex: openCards.length - idx }}>
-              <Card
-                image={card.image}
-                value={card.value}
-                suit={card.suit}
-                flipped={true}
-              />
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
+    <>
+      <main className='w-[1200px] h-[1300px] mt-3'>
+        <section className='w-[full] flex-row flex rounded-2'>
+          <div className='w-[50%] h-[full] rounded-2 '>
+            <Jackpot deckId={deckId} cards={jackpotCards} length={jackpotNumOfCards} />
+          </div>
+          <div className='w-[50%] h-[full] rounded-2 '>
+            <FinakStacks />
+          </div>
+        </section>
+        <section>
+          <GameStacks cards={deck.slice(jackpotNumOfCards, deck.length)} />
+        </section>
+      </main>
+    </>
+
   );
 };
 

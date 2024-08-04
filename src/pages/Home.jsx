@@ -3,6 +3,7 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import Solitaire from '../components/game/Solitaire.jsx';
 
+
 const Home = () => {
   const backgroundStyle = {
     backgroundImage: `url(/images/backGroundO.jpg)`,
