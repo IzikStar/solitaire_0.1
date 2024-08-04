@@ -32,7 +32,7 @@ const Solitaire = () => {
 
     try {
       // Check if there are open cards and reset if needed
-      if (closedCards.length === count) {
+      if (openCards.length === count) {
         setClosedCards(openCards.reverse());
         // setClosedCards(closedCards.);
         setOpenCards([]);
@@ -44,8 +44,8 @@ const Solitaire = () => {
       //   setIndex(0);
       // }
       else if (closedCards.length === 0) {
-        response = await fetch(`https://deckofcardsapi.com/api/deck/${deckId}/draw/?count=${count}`);
-        data = await response.json();
+        const response = await fetch(`https://deckofcardsapi.com/api/deck/${deckId}/draw/?count=${count}`);
+        const data = await response.json();
         setClosedCards(data.cards);
       }
     } catch (error) {
