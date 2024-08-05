@@ -1,47 +1,57 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
+import Draggable from 'react-draggable';
 
 const Card = ({ image, value, suit, flipped }) => {
-  const backImage = "https://www.deckofcardsapi.com/static/img/back.png"; // Replace with your own back image URL.
-  const cardRef = useRef(null); // שימוש ב-ref כדי לשמור על גישה לאלמנט
-  const [initialPosition, setInitialPosition] = useState({ top: 0, left: 0 });
+  const backImage = "https://www.deckofcardsapi.com/static/img/back.png";
+  const cardRef = useRef(null);
+  const [initialPosition, setInitialPosition] = useState({ x: 0, y: 0 });
   const [dragging, setDragging] = useState(false);
 
-  const handleDragStart = (e) => {
-    setDragging(true);
-    const rect = cardRef.current.getBoundingClientRect();
-    setInitialPosition({
-      top: rect.top + window.scrollY,
-      left: rect.left + window.scrollX
-    });
-    e.dataTransfer.setData('text/plain', ''); // דרוש כדי להפעיל את drag and drop
+  useEffect(() => {
+    // לקרוא את המיקום ההתחלתי ברגע שהרכיב נטען
+    if (cardRef.current) {
+      const rect = cardRef.current.getBoundingClientRect();
+      setInitialPosition({ x: rect.left, y: rect.top });
+    }
+  }, []);
+
+  const onStart = () => {
+    if (flipped) {
+      setDragging(true);
+    }
   };
 
-  const handleDragEnd = (e) => {
+  const onStop = () => {
     setDragging(false);
-    cardRef.current.style.position = 'absolute';
-    cardRef.current.style.top = `${initialPosition.top}px`;
-    cardRef.current.style.left = `${initialPosition.left}px`;
-  };
-
-  const handleDragOver = (e) => {
-    e.preventDefault(); // דרוש כדי לאפשר גרירה
+    if (cardRef.current) {
+      // החזרת הרכיב למיקום ההתחלתי
+      cardRef.current.style.transform = `translate(${initialPosition.x}px, ${initialPosition.y}px)`;
+    }
   };
 
   return (
-    <div
-      ref={cardRef}
-      className="w-24 h-32 cursor-pointer"
-      draggable
-      onDragStart={handleDragStart}
-      onDragEnd={handleDragEnd}
-      onDragOver={handleDragOver} // מאפשר לגרור
+    <Draggable
+      onStart={onStart}
+      onStop={onStop}
+      disabled={!flipped} // השבתת הגרירה אם הקלף לא פתוח
     >
-      <img
-        src={flipped ? image : backImage}
-        alt={flipped ? `${value} of ${suit}` : "Card Back"}
-        className="w-full h-full rounded-md"
-      />
-    </div>
+      <div
+        ref={cardRef}
+        className={`card ${dragging ? 'dragging' : ''}`}
+        style={{
+          position: 'absolute',
+          cursor: flipped ? 'move' : 'default',
+          transform: dragging ? 'none' : `translate(${initialPosition.x}px, ${initialPosition.y}px)`, // החלפת תרגום
+          transition: 'transform 0.2s ease' // אנימציה חלקה למעבר למיקום ההתחלתי
+        }}
+      >
+        <img
+          src={flipped ? image : backImage}
+          alt={flipped ? `${value} of ${suit}` : "Card Back"}
+          className="w-full h-full rounded-md"
+        />
+      </div>
+    </Draggable>
   );
 };
 

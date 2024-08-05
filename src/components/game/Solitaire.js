@@ -3,4 +3,4 @@ export const solitaire = {
     "deckId": null,
 }
 
-export const jackpotNumOfCards = 24;
+export const jackpotNumOfCards = 4;
