@@ -4,3 +4,7 @@ export const solitaire = {
 }
 
 export const jackpotNumOfCards = 4;
+
+export const ItemTypes = {
+    CARD: 'card',
+  };
