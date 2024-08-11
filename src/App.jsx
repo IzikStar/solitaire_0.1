@@ -9,15 +9,21 @@ import './App.css';
 export const GameContext = createContext();
 
 function App() {
-  const [deck, setDeck] = useState(null);
+  const [deck, setDeck] = useState([]);
   const [key, setKey] = useState(0);
+  const [selectedCard, setSelectedCard] = useState(null)
+  const [numOfClicks, setNumOfClicks] = useState(0);
 
   // כל הפונקציות והמצב של המשחק
   const gameState = {
     deck,
     setDeck,
     key,
-    setKey
+    setKey,
+    selectedCard,
+    setSelectedCard,
+    numOfClicks,
+    setNumOfClicks,
   };
 
   return (

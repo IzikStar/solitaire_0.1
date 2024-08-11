@@ -1,14 +1,21 @@
-import React from 'react';
+import {React,useContext} from 'react';
 import { useDrag } from 'react-dnd';
 import { ItemTypes } from './Solitaire';
+import { GameContext } from '../../App.jsx';
 
-const Card = ({ image, value, suit, flipped }) => {
+
+const Card = ({ image, value, suit, flipped, code}) => {
+
+
+  const { setSelectedCard,numOfClicks,setNumOfClicks } = useContext(GameContext);
+
+
   const [{ isDragging }, dragRef] = useDrag(() => ({
     type: ItemTypes.CARD,
     item: { value, suit },
     canDrag: () => flipped,
     collect: (monitor) => ({
-      isDragging: monitor.isDragging()
+      isDragging: !!monitor.isDragging()
     })
   }), [flipped]);
 
@@ -27,6 +34,13 @@ const Card = ({ image, value, suit, flipped }) => {
         src={flipped ? image : backImage}
         alt={flipped ? `${value} of ${suit}` : "Card Back"}
         className="w-full h-full rounded-md"
+        onClick={() => {
+          if (flipped) {
+            console.log('Clicked')
+            setSelectedCard(code);
+            setNumOfClicks(numOfClicks + 1);
+          }
+        }}
       />
     </div>
   );

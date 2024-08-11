@@ -1,19 +1,43 @@
-import React, { useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import Card from './Card';
-import { GameContext } from '../../App.jsx';
 
 const GameStack = (props) => {
-    const { key, setKey } = useContext(GameContext);
+    const [numOfCards, setNumOfCards] = useState(props.cards.length);
+    const [numOfOpenCards, setNumOfOpenCards] = useState(1);
+    const [numOfClosedCards, setNumOfClosedCards] = useState(0);
+    const [changeCount, setChangeCount] = useState(0);
+
+    useEffect(() => {
+        if (changeCount === 2) {
+            // Update numOfClosedCards on the third change
+            setNumOfClosedCards(props.cards.length - 1);
+        } else if (changeCount > 2) {
+            // After the third change, only reduce numOfClosedCards if numOfCards is less
+            if (props.cards.length <= numOfCards - numOfOpenCards) {
+                setNumOfClosedCards(prevClosedCards => Math.max(prevClosedCards - 1, 0));
+            }
+        }
+        setNumOfCards(props.cards.length);
+    }, [props.cards]);
+
+    useEffect(() => {
+        // Update numOfOpenCards based on numOfClosedCards
+        setNumOfOpenCards(numOfCards - numOfClosedCards);
+    }, [numOfCards, numOfClosedCards]);
+
+    useEffect(() => {
+        // Increment changeCount every time props.cards changes
+        setChangeCount(prevCount => prevCount + 1);
+    }, [props.cards]);
 
     const generateStack = (cards, name) => {
         const elements = [];
         for (let i = cards.length - 1; i >= 0; i--) {
             const card = cards[i];
             const offsetY = 18;
-
             elements.push(
                 <div
-                    key={card.key}
+                    key={card.code}
                     className='absolute'
                     style={{ 
                         zIndex: cards.length - 1 - i,
@@ -21,17 +45,17 @@ const GameStack = (props) => {
                     }}
                 >
                     <Card
-                        key={key}
+                        key={card.code}
+                        code={card.code}
                         index={i}
                         stack={name}
-                        flipped={i === 0}
+                        flipped={i < numOfOpenCards}
                         image={card.image}
                         value={card.value}
                         suit={card.suit}
                     />
                 </div>
             );
-            setKey(key + 1);
         }
         return elements;
     }

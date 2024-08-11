@@ -31,7 +31,7 @@ const Jackpot = (props) => {
     const closeCardsGenerator = (length) => {
         if (index === length) {
             return (
-                <div className=" h-[128px] w-[96px] border-1 rounded-2 border-light bg-light opacity-[80%] mx-2 cursor-pointer "  onClick={() => drawCards(props.cards)}>
+                <div className=" h-[128px] w-[96px] border-1 rounded-2 border-light bg-light opacity-[80%] mx-2 cursor-pointer " onClick={() => drawCards(props.cards)}>
                     <img src="\images\redeal.webp" alt="resomething" />
                 </div>
             )
@@ -54,6 +54,8 @@ const Jackpot = (props) => {
                     {openCards.map((card, idx) => (
                         <div key={card.code + idx} className="card" style={{ zIndex: openCards.length - idx }}>
                             <Card
+                                key={card.code}
+                                code={card.code}
                                 image={card.image}
                                 value={card.value}
                                 suit={card.suit}
