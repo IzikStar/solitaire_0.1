@@ -10,6 +10,11 @@ const Jackpot = (props) => {
     const [index, setIndex] = useState(0);
 
     useEffect(() => {
+        if(props.cards.length === 0) {
+            setClosedCards([]);
+            setOpenCards([]);
+            setIndex(0);
+        }
         // כאשר כמות הקלפים לא משתנה
         if (props.cards.length >= closedCards.length + openCards.length) {
             const updatedClosedCards = props.cards.slice();
