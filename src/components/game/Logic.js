@@ -48,5 +48,6 @@ const getValue = (letter) => {
     if (letter === 'J') return 11;
     if (letter === 'Q') return 12;
     if (letter === 'K') return 13;
+    if (letter === '0') return 10;
     return Number(letter);
 }
