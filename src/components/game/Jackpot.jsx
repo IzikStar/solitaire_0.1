@@ -5,10 +5,6 @@ import Card from './Card';
 const Jackpot = (props) => {
     const toLog = true; // משתנה לבדיקת הדפסות
 
-    const [closedCards, setClosedCards] = useState([]);
-    const [openCards, setOpenCards] = useState([]);
-    const [index, setIndex] = useState(0);
-
     useEffect(() => {
         if(props.cards.length === 0) {
             setClosedCards([]);

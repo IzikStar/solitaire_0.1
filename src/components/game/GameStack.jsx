@@ -3,7 +3,7 @@ import Card from './Card';
 import { GameContext } from '../../App.jsx';
 
 const GameStack = (props) => {
-    const { restartsGameNum } = useContext(GameContext);
+    const { numOfNewGame } = useContext(GameContext);
 
     const [numOfCards, setNumOfCards] = useState(props.cards.length);
     const [numOfOpenCards, setNumOfOpenCards] = useState(1);
@@ -11,10 +11,10 @@ const GameStack = (props) => {
     const [changeCount, setChangeCount] = useState(0);
 
     useEffect(() => {
-        if (changeCount === 3) {
+        if (changeCount === 2) {
             // Update numOfClosedCards on the third change
             setNumOfClosedCards(props.cards.length - 1);
-        } else if (changeCount > 3) {
+        } else if (changeCount > 2) {
             // After the third change, only reduce numOfClosedCards if numOfCards is less
             if (props.cards.length <= numOfCards - numOfOpenCards) {
                 setNumOfClosedCards(prevClosedCards => Math.max(prevClosedCards - 1, 0));
@@ -35,8 +35,15 @@ const GameStack = (props) => {
     
     useEffect(() => {
         // Increment changeCount every time props.cards changes
-        setChangeCount(1);
-    }, [restartsGameNum]);
+        if(numOfNewGame === 0){
+            setChangeCount(0);
+        }
+        else{
+            setChangeCount(1);
+        }
+    }, [numOfNewGame]);
+
+
 
     const generateStack = (cards, name) => {
         const elements = [];

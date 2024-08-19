@@ -1,6 +1,6 @@
 import React from 'react';
-import BurgerMenuItem from '../basic/BurgerMenuItem';
-import BurgerMenu from '../basic/BurgerMenu';
+import BurgerMenuItem from './BurgerMenuItem';
+import BurgerMenu from './BurgerMenu';
 
 const Menu = () => {
     const generateDivs = () => {

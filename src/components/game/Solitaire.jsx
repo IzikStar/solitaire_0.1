@@ -7,47 +7,54 @@ import FinakStacks from './FinakStacks.jsx';
 import GameStack from './GameStack.jsx';
 import { isValidToStacksMove, isValidToPilesMove, getRandomIndex } from './Logic.js';
 import FinalStack from './FinalStack.jsx';
+import { OurStack } from './OurStack.js';
+import { game, Game } from './Game.js';
+import { GameState } from './GameState.js';
 
 const Solitaire = () => {
   const [deckId, setDeckId] = useState(null);
   const [jackpotCards, setJackpotCards] = useState([]);
   const [jackpotLength, setJackpotLength] = useState(jackpotNumOfCards);
 
-  const { deck, setDeck, selectedCard, numOfClicks, restartsGameNum, setRestartsGameNum } = useContext(GameContext);
+  const { deck, setDeck, selectedCard, numOfClicks, numOfNewGame, setNumOfNewGame } = useContext(GameContext);
 
   const [stacksCards, setStacksCards] = useState([]);
-  const [stack1, setStack1] = useState([]);
-  const [stack2, setStack2] = useState([]);
-  const [stack3, setStack3] = useState([]);
-  const [stack4, setStack4] = useState([]);
-  const [stack5, setStack5] = useState([]);
-  const [stack6, setStack6] = useState([]);
-  const [stack7, setStack7] = useState([]);
+  const [stack1, setStack1] = useState(new OurStack());
+  const [stack2, setStack2] = useState(new OurStack());
+  const [stack3, setStack3] = useState(new OurStack());
+  const [stack4, setStack4] = useState(new OurStack());
+  const [stack5, setStack5] = useState(new OurStack());
+  const [stack6, setStack6] = useState(new OurStack());
+  const [stack7, setStack7] = useState(new OurStack());
 
   const [pile1, setPile1] = useState([]);
   const [pile2, setPile2] = useState([]);
   const [pile3, setPile3] = useState([]);
   const [pile4, setPile4] = useState([]);
 
+  const [Jackpot,setJackpot] = useState(new OurStack());
   const stacksArray = [stack1, stack2, stack3, stack4, stack5, stack6, stack7]
   const pileArray = [pile1, pile2, pile3, pile4];
 
+  const currentGame = require(game);
+
 
   useEffect(() => {
-    setStack1([]);
-    setStack2([]);
-    setStack3([]);
-    setStack4([]);
-    setStack5([]);
-    setStack6([]);
-    setStack7([]);
+    setStack1(new OurStack());
+    setStack2(new OurStack());
+    setStack3(new OurStack());
+    setStack4(new OurStack());
+    setStack5(new OurStack());
+    setStack6(new OurStack());
+    setStack7(new OurStack());
     setPile1([]);
     setPile2([]);
     setPile3([]);
     setPile4([]);
     setJackpotCards([]);
+    setJackpot(new OurStack())
     fetchDeck();
-  }, [restartsGameNum]);
+  }, [numOfNewGame]);
 
   useEffect(() => {
     if (deckId) {
@@ -281,6 +288,7 @@ const Solitaire = () => {
       setDeck(data.cards);
       setJackpotCards(data.cards.slice(0, jackpotNumOfCards));
       setStacksCards(data.cards.slice(jackpotNumOfCards, data.cards.length));
+      currentGame = new Game(new GameState(stacksArray,pileArray, Jackpot, 0));
       console.log("deck:", data.cards);
       // console.log("jackpotCards:", data.cards.slice(0, jackpotNumOfCards));
     } catch (error) {
@@ -289,13 +297,13 @@ const Solitaire = () => {
   };
 
   const generateStacksArrays = (cards) => {
-    setStack1(cards.slice(0, 1));
-    setStack2(cards.slice(1, 3));
-    setStack3(cards.slice(3, 6));
-    setStack4(cards.slice(6, 10));
-    setStack5(cards.slice(10, 15));
-    setStack6(cards.slice(15, 21));
-    setStack7(cards.slice(21, 28));
+    setStack1(cards.slice(0, 1),1);
+    setStack2(cards.slice(1, 3),1);
+    setStack3(cards.slice(3, 6),1);
+    setStack4(cards.slice(6, 10),1);
+    setStack5(cards.slice(10, 15),1);
+    setStack6(cards.slice(15, 21),1);
+    setStack7(cards.slice(21, 28),1);
   };
 
   const generateStacks = () => {
@@ -315,7 +323,7 @@ const Solitaire = () => {
       <main className='w-[1200px] h-[1300px] mt-3'>
         <section className='w-[full] flex-row flex rounded-2'>
           <div className='w-[50%] h-[full] rounded-2 '>
-            <Jackpot deckId={deckId} cards={jackpotCards} length={jackpotNumOfCards} />
+            <Jackpot deckId={deckId} cards={jackpot}/>
           </div>
           <div className='w-[50%] h-[full] rounded-2 '>
             <div className="flex flex-row justify-around mt-4">

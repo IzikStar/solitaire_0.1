@@ -1,12 +1,12 @@
 import { React, useContext } from 'react';
 import Button from './basic/Button';
-import Menu from './game/Menu';
+import Menu from './basic/Menu';
 import Fancy3Buttons from './basic/Fancy3Buttons';
 import { GameContext } from '../App.jsx';
 
 const Header = (props) => {
 
-    const { setSelectedCard, setNumOfClicks, setRestartsGameNum, restartsGameNum } = useContext(GameContext);
+    const { setSelectedCard, setNumOfClicks, setNumOfNewGame, numOfNewGame } = useContext(GameContext);
 
     const refreshPage = () => {
         window.location.reload();
@@ -14,7 +14,7 @@ const Header = (props) => {
     
     const restartGame = () => {
         setNumOfClicks(0);
-        setRestartsGameNum(restartsGameNum + 1);
+        setNumOfNewGame(numOfNewGame + 1);
         setSelectedCard(null);
         console.log('restartGame');
     };
