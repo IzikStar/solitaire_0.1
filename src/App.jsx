@@ -11,7 +11,7 @@ export const GameContext = createContext();
 function App() {
   const [deck, setDeck] = useState([]);
   const [key, setKey] = useState(0);
-  const [selectedCard, setSelectedCard] = useState(null)
+  const [selectedCard, setSelectedCard] = useState(null);
   const [numOfClicks, setNumOfClicks] = useState(0);
   const [numOfNewGame, setNumOfNewGame] = useState(0);
   const [numOfRestarts, setNumOfRestarts] = useState(0);

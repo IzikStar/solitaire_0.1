@@ -1,41 +1,90 @@
 import React from 'react';
+import styled, { keyframes } from 'styled-components';
 
-const Footer = (props) => {
+// אנימציות
+
+const fadeIn = keyframes`
+  from { opacity: 0; transform: translateY(100%); }
+  to { opacity: 1; transform: translateY(0); }
+`;
+
+// רכיבי עיצוב
+
+const FooterContainer = styled.footer`
+  background-color: #000;
+  color: #0af;
+  padding: 20px;
+  text-align: center;
+  position: relative;
+  bottom: 0;
+  width: 100%;
+  animation: ${fadeIn} 1s ease-out;
+  box-shadow: 0 -2px 10px rgba(0, 255, 255, 0.3);
+`;
+
+const FooterContent = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+`;
+
+const FooterLink = styled.a`
+  color: #0af;
+  text-decoration: none;
+  margin: 0 10px;
+  transition: color 0.3s ease-in-out;
+
+  &:hover {
+    color: #00ffff;
+  }
+`;
+
+const FooterLogo = styled.div`
+  font-size: 24px;
+  font-weight: bold;
+  color: #00ffff;
+`;
+
+const FooterText = styled.p`
+  margin-top: 10px;
+  color: #aaa;
+`;
+
+const SocialIcons = styled.div`
+  margin-top: 10px;
+  & > a {
+    margin: 0 10px;
+    font-size: 20px;
+    transition: transform 0.3s ease-in-out;
+    color: #0af;
+
+    &:hover {
+      transform: scale(1.2);
+      color: #00ffff;
+    }
+  }
+`;
+
+const Footer = () => {
   return (
-    <footer className={`bg-gray-600 text-white py-4`}>
-      <div className='container d-flex justify-content-between text-right'>
-
-        <div className='flex-1 mx-2'>
-          <h2 className='text-xl font-bold'>צור קשר</h2>
-          <p className='text-sm'>דוא"ל: contact@fishgallery.com</p>
-          <p className='text-sm'>טלפון: 03-1234567</p>
+    <FooterContainer>
+      <FooterContent>
+        <FooterLogo>FutureCorp</FooterLogo>
+        <div>
+          <FooterLink href="#about">About</FooterLink>
+          <FooterLink href="#services">Services</FooterLink>
+          <FooterLink href="#contact">Contact</FooterLink>
         </div>
-
-        <div className="">
-          <div className="row justify-content-around">
-            <i className="bi bi-facebook fs-1 col-4"></i>
-            <i className="bi bi-whatsapp fs-1 col-4"></i>
-            <i className="bi bi-instagram fs-1 col-4"></i>
-          </div>
-        </div>
-
-        <div className='flex-1 mx-2'>
-          <h2 className='text-xl font-bold'>קישורים מהירים</h2>
-          <ul className='list-none p-0'>
-            <li><a href="/" className='text-sm text-decoration-none text-white hover:text-yellow-300'>בית</a></li>
-            <li><a href="/Gallery" className='text-sm text-decoration-none text-white hover:text-yellow-300'>גלריית דגים</a></li>
-            <li><a href="/SearchGallery" className='text-sm text-decoration-none text-white hover:text-yellow-300'>חיפוש גלריה</a></li>
-            <li><a href="/DangerGallery" className='text-sm text-decoration-none text-white hover:text-yellow-300'>סכנת הכחדה</a></li>
-            <li><a href="/Filter" className='text-sm text-decoration-none text-white hover:text-yellow-300'>סינון</a></li>
-          </ul>
-        </div>
-        <div className='flex-1 mx-2'>
-          <p className='text-sm'>&copy; 2024 Fish Gallery. כל הזכויות שמורות.</p>
-        </div>
-        
-      </div>
-    </footer>
+        <SocialIcons>
+          <a href="https://www.facebook.com" target="_blank" rel="noopener noreferrer">🌐</a>
+          <a href="https://www.twitter.com" target="_blank" rel="noopener noreferrer">🐦</a>
+          <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer">📸</a>
+        </SocialIcons>
+      </FooterContent>
+      <FooterText>&copy; 2024 FutureCorp. All rights reserved.</FooterText>
+    </FooterContainer>
   );
-}
+};
 
 export default Footer;

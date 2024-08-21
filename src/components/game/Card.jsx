@@ -26,7 +26,7 @@ const Card = ({ image, value, suit, flipped, code}) => {
       ref={dragRef}
       className={`card ${isDragging ? 'dragging' : ''}`}
       style={{
-        cursor: flipped ? 'move' : 'default',
+        cursor: flipped ? 'pointer' : 'default',
         zIndex: isDragging ? 999 : 'auto'
       }}
     >
