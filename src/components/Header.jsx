@@ -6,7 +6,7 @@ import { GameContext } from '../App.jsx';
 
 const Header = (props) => {
 
-    const { setSelectedCard, setNumOfClicks, setNumOfNewGame, numOfNewGame } = useContext(GameContext);
+    const { setSelectedCard, setNumOfClicks, setNumOfNewGame, numOfNewGame, currentGame, setCurrentGame } = useContext(GameContext);
 
     const refreshPage = () => {
         window.location.reload();
@@ -27,8 +27,8 @@ const Header = (props) => {
                 <div className='flex w-[400px] justify-content-between' >
                     <Button icon='undo' onClick={restartGame} />
                     <div className='flex w-[200px] justify-content-evenly'>
-                        <Button icon='arrow-left' />
-                        <Button icon='arrow-right' />
+                        <Button icon='arrow-left'  onClick={() => setCurrentGame(currentGame.undo())} />
+                        <Button icon='arrow-right' onClick={() => setCurrentGame(currentGame.redo())} />
                     </div>
                     <Button icon='lightbulb' />
                 </div>
