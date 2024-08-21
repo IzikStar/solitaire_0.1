@@ -14,6 +14,7 @@ function App() {
   const [selectedCard, setSelectedCard] = useState(null)
   const [numOfClicks, setNumOfClicks] = useState(0);
   const [numOfNewGame, setNumOfNewGame] = useState(0);
+  const [numOfRestarts, setNumOfRestarts] = useState(0);
   const [currentGame, setCurrentGame] = useState(null);
 
   // כל הפונקציות והמצב של המשחק
@@ -29,7 +30,9 @@ function App() {
     numOfNewGame,
     setNumOfNewGame,
     currentGame,
-    setCurrentGame
+    setCurrentGame,
+    numOfRestarts,
+    setNumOfRestarts
   };
 
   return (

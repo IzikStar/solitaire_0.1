@@ -15,7 +15,9 @@ const Solitaire = () => {
 
   const [deckId, setDeckId] = useState(null);
 
-  const { deck, setDeck, selectedCard, numOfClicks, numOfNewGame, setNumOfNewGame, currentGame, setCurrentGame } = useContext(GameContext);
+  const { deck, setDeck, selectedCard, numOfClicks, numOfNewGame, setNumOfNewGame, currentGame, setCurrentGame, numOfRestarts } = useContext(GameContext);
+
+  const [numOfTurns, setNumOfTurns] = useState(0);
 
   const [stack1, setStack1] = useState(new OurStack());
   const [stack2, setStack2] = useState(new OurStack());
@@ -34,12 +36,20 @@ const Solitaire = () => {
 
   const stacksArray = [stack1, stack2, stack3, stack4, stack5, stack6, stack7]
   const pileArray = [pile1, pile2, pile3, pile4];
+  
 
-  let nonStateStacksArray = [new OurStack(), new OurStack(), new OurStack(), new OurStack(), new OurStack(), new OurStack(), new OurStack];
-  let nonStatePileArray = [[], [], [], []];
-  let nonStateJackpot = new OurStack();
+  let nonStateStacksArray;
+  let nonStatePileArray;
+  let nonStateJackpot;
+  let allreadyInitialized;
 
-
+  if (allreadyInitialized === undefined) {
+    console.log("initializing");
+    nonStateStacksArray = [new OurStack(), new OurStack(), new OurStack(), new OurStack(), new OurStack(), new OurStack(), new OurStack];
+    nonStatePileArray = [[], [], [], []];
+    nonStateJackpot = new OurStack();
+    allreadyInitialized = true;
+  }
 
   useEffect(() => {
     setStack1(new OurStack());
@@ -56,6 +66,12 @@ const Solitaire = () => {
     setJackpotOurStack(new OurStack());
     fetchDeck();
   }, [numOfNewGame]);
+
+  useEffect(() => {
+    if (numOfRestarts > 0) {
+      setCurrentGame(currentGame.reset());
+    }
+  }, [numOfRestarts]);
 
   useEffect(() => {
     if (deckId) {
@@ -286,11 +302,8 @@ const Solitaire = () => {
 
 
       if (toLog) console.log("Stacks, Piles and Jackpot updated after move");  // הדפסה לבדיקת הסטקים, הפיילים וה- jackpot לאחר ניקוי
-      console.log("CURRENT GAME:" + currentGame.getCurrentState());
-      console.log("Stacks array:" + nonStateStacksArray);
-      console.log("Piles array:" + nonStatePileArray);
-      console.log("Jackpot cards state:" + JackpotOurStack);
-      updateGame(new GameState(nonStateStacksArray, nonStatePileArray, nonStateJackpot));
+      // console.log("CURRENT GAME:" + currentGame.getCurrentState());
+      setNumOfTurns(prev => prev + 1)
     }
   }, [numOfClicks]);
 
@@ -307,6 +320,12 @@ const Solitaire = () => {
       console.log("updating the jackpot by the current game");
     }
   }, [currentGame])
+
+  useEffect(() => {   
+    if (numOfTurns > 0) {
+      updateGame(new GameState(stacksArray, pileArray, JackpotOurStack, numOfTurns));
+    } 
+  }, [numOfTurns])
 
   const updateStackAndPile = () => {
     setStack1(currentGame.getCurrentState().getStacks()[0]);
@@ -359,22 +378,18 @@ const Solitaire = () => {
       const data = await response.json();
       setDeck(data.cards);
       generateDeck(data.cards, data.cards.slice(jackpotNumOfCards, data.cards.length))
-      console.log("nonStateJackpot: " + nonStateJackpot);
       // console.log("jackpotCards:", data.cards.slice(0, jackpotNumOfCards));
     } catch (error) {
       console.error('Error drawing cards:', error);
     }
   };
 
-
   const generateDeck = (deck, stacksCards) => {
     if (stacksCards.length > 0 && deck !== undefined) {
       // console.log("stacksCards:", stacksCards);  // הדפסה לבדיקת ה- stacksCards
       generateStacksArrays(stacksCards);
       generateJackpot(deck);
-      console.log("nonStateJackpot1" + nonStateJackpot);
       setCurrentGame(new Game(new GameState(nonStateStacksArray, nonStatePileArray, nonStateJackpot)));
-      console.log("nonStateJackpot2" + nonStateJackpot);
     }
   }
 
@@ -396,13 +411,10 @@ const Solitaire = () => {
     nonStateStacksArray[6] = new OurStack(cards.slice(21, 28), 1);
   };
 
-
   const generateJackpot = (cards) => {
     nonStateJackpot = new OurStack(cards.slice(0, jackpotNumOfCards));
     setJackpotOurStack(new OurStack(cards.slice(0, jackpotNumOfCards)));
   }
-
-
 
   const generateStacks = () => {
     const stacks = [];

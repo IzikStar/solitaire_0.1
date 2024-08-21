@@ -49,6 +49,10 @@ export class OurStack {
             numOfOpenCards = this.openCards + (cards.length - this.cards.length);
         }
         else{
+            numOfOpenCards = this.openCards - (this.cards.length - cards.length);
+        }
+
+        if (numOfOpenCards === 0) {
             numOfOpenCards = 1;
         }
         return new OurStack(cards, numOfOpenCards);
