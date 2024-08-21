@@ -25,9 +25,9 @@ export class GameState {
     }
 
     toString() {
-        return `Stacks: ${this.stacks !== undefined ? this.stacks : 'undefined'}, 
-        Piles: ${this.piles !== undefined ? this.piles : 'undefined'},
-        Jackpot: ${this.jackpotStack ? this.jackpotStack.toString() : 'undefined'},
-        Move: ${this.numOfMove !== undefined ? this.numOfMove : 'undefined'}`;
+        return `\nStacks:\n${this.stacks !== undefined ? this.stacks : 'undefined'}, 
+        \nPiles:\n${this.piles !== undefined ? this.piles : 'undefined'},
+        \nJackpot:\n${this.jackpotStack ? this.jackpotStack.toString() : 'undefined'},
+        \nMove:\n${this.numOfMove !== undefined ? this.numOfMove : 'undefined'}`;
     }
 }

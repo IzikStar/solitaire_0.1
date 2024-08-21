@@ -59,7 +59,7 @@ export class OurStack {
     }
 
     toString() {
-        return `Cards: ${this.cards !== undefined ? this.cards.map((card, i) => `${i}: ${card ? card.code : 'undefined'}`).join("\n") : 'undefined'}, 
-        Open Cards: ${this.openCards !== undefined ? this.openCards : 'undefined'}`;
+        return `\nCards:\n${this.cards !== undefined ? this.cards.map((card, i) => `${i}: ${card ? card.code : 'undefined'}`).join("\n") : 'undefined'}, 
+        \nOpen Cards:\n${this.openCards !== undefined ? this.openCards : 'undefined'}`;
     }
 }

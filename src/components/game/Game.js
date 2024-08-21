@@ -63,10 +63,10 @@ export class Game {
 
 
     toString() {
-        return `Current State: ${this.currentState ? this.currentState.toString() : 'undefined'}
-            History Length: ${this.history ? this.history.length : 'undefined'}
-            Current Index: ${this.index !== undefined ? this.index : 'undefined'}
-            History:
+        return `\nCurrent State:\n${this.currentState ? this.currentState.toString() : 'undefined'}
+            \nHistory Length:\n${this.history ? this.history.length : 'undefined'}
+            \nCurrent Index:\n${this.index !== undefined ? this.index : 'undefined'}
+            \nHistory:\n
         ${this.history ? this.history.map((state, i) => `${i}: ${state ? state.toString() : 'undefined'}`).join("\n") : 'undefined'}`;
     }
 }

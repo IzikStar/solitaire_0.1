@@ -17,7 +17,6 @@ const Solitaire = () => {
 
   const { deck, setDeck, selectedCard, numOfClicks, numOfNewGame, setNumOfNewGame, currentGame, setCurrentGame } = useContext(GameContext);
 
-  const [stacksCards, setStacksCards] = useState([]);
   const [stack1, setStack1] = useState(new OurStack());
   const [stack2, setStack2] = useState(new OurStack());
   const [stack3, setStack3] = useState(new OurStack());
@@ -36,12 +35,12 @@ const Solitaire = () => {
   const stacksArray = [stack1, stack2, stack3, stack4, stack5, stack6, stack7]
   const pileArray = [pile1, pile2, pile3, pile4];
 
-  let nunStateStacksArray = [new OurStack(), new OurStack(), new OurStack(), new OurStack(), new OurStack(), new OurStack(), new OurStack];
-  let nunStatePileArray = [[], [], [], []];
-  let nunStateJackpot = new OurStack();
+  let nonStateStacksArray = [new OurStack(), new OurStack(), new OurStack(), new OurStack(), new OurStack(), new OurStack(), new OurStack];
+  let nonStatePileArray = [[], [], [], []];
+  let nonStateJackpot = new OurStack();
 
 
-  
+
   useEffect(() => {
     setStack1(new OurStack());
     setStack2(new OurStack());
@@ -63,15 +62,6 @@ const Solitaire = () => {
       drawDeck(deckId);
     }
   }, [deckId]);
-
-  // השפעות על שינוי ב- stacksCards
-  useEffect(() => {
-    if (stacksCards.length > 0) {
-      // console.log("stacksCards:", stacksCards);  // הדפסה לבדיקת ה- stacksCards
-      generateStacksArrays(stacksCards);
-      setCurrentGame(new Game(new GameState(nunStateStacksArray, nunStatePileArray, nunStateJackpot)));
-    }
-  }, [stacksCards]);
 
   // השפעות על שינוי ב- selectedCard
   useEffect(() => {
@@ -167,19 +157,19 @@ const Solitaire = () => {
       switch (getRandomIndex(toPile, true)) {
         case 0:
           setPile1(prevPile => [...prevPile, selectedCards[0]]);
-          nunStatePileArray[0].push(selectedCards[0]);
+          nonStatePileArray[0].push(selectedCards[0]);
           break;
         case 1:
           setPile2(prevPile => [...prevPile, selectedCards[0]]);
-          nunStatePileArray[1].push(selectedCards[0]);
+          nonStatePileArray[1].push(selectedCards[0]);
           break;
         case 2:
           setPile3(prevPile => [...prevPile, selectedCards[0]]);
-          nunStatePileArray[2].push(selectedCards[0]);
+          nonStatePileArray[2].push(selectedCards[0]);
           break;
         case 3:
           setPile4(prevPile => [...prevPile, selectedCards[0]]);
-          nunStatePileArray[3].push(selectedCards[0]);
+          nonStatePileArray[3].push(selectedCards[0]);
           break;
         default:
           break;
@@ -190,30 +180,30 @@ const Solitaire = () => {
         switch (getRandomIndex(toStack, true)) {
           case 0:
             setStack1(stack1.getNewOurStackFromArray([...selectedCards, ...stack1.getCards()]));
-            nunStateStacksArray[0] = nunStateStacksArray[0].getNewOurStackFromArray([[...selectedCards, ...nunStateStacksArray[0].getCards()]])
+            nonStateStacksArray[0] = nonStateStacksArray[0].getNewOurStackFromArray([[...selectedCards, ...nonStateStacksArray[0].getCards()]])
             break;
           case 1:
             setStack2(stack2.getNewOurStackFromArray([...selectedCards, ...stack2.getCards()]));
-            nunStateStacksArray[1] = nunStateStacksArray[1].getNewOurStackFromArray([[...selectedCards, ...nunStateStacksArray[1].getCards()]])
+            nonStateStacksArray[1] = nonStateStacksArray[1].getNewOurStackFromArray([[...selectedCards, ...nonStateStacksArray[1].getCards()]])
             break;
           case 2:
             setStack3(stack3.getNewOurStackFromArray([...selectedCards, ...stack3.getCards()]));
-            nunStateStacksArray[2] = nunStateStacksArray[2].getNewOurStackFromArray([[...selectedCards, ...nunStateStacksArray[2].getCards()]])
+            nonStateStacksArray[2] = nonStateStacksArray[2].getNewOurStackFromArray([[...selectedCards, ...nonStateStacksArray[2].getCards()]])
             break;
           case 3:
-            setStack4(stack4.getNewOurStackFromArray([...selectedCards, ...stack4.getCards()])); nunStateStacksArray[3] = nunStateStacksArray[3].getNewOurStackFromArray([[...selectedCards, ...nunStateStacksArray[3].getCards()]])
+            setStack4(stack4.getNewOurStackFromArray([...selectedCards, ...stack4.getCards()])); nonStateStacksArray[3] = nonStateStacksArray[3].getNewOurStackFromArray([[...selectedCards, ...nonStateStacksArray[3].getCards()]])
             break;
           case 4:
             setStack5(stack5.getNewOurStackFromArray([...selectedCards, ...stack5.getCards()]));
-            nunStateStacksArray[4] = nunStateStacksArray[4].getNewOurStackFromArray([[...selectedCards, ...nunStateStacksArray[4].getCards()]])
+            nonStateStacksArray[4] = nonStateStacksArray[4].getNewOurStackFromArray([[...selectedCards, ...nonStateStacksArray[4].getCards()]])
             break;
           case 5:
             setStack6(stack6.getNewOurStackFromArray([...selectedCards, ...stack6.getCards()]));
-            nunStateStacksArray[5] = nunStateStacksArray[5].getNewOurStackFromArray([[...selectedCards, ...nunStateStacksArray[5].getCards()]])
+            nonStateStacksArray[5] = nonStateStacksArray[5].getNewOurStackFromArray([[...selectedCards, ...nonStateStacksArray[5].getCards()]])
             break;
           case 6:
             setStack7(stack7.getNewOurStackFromArray([...selectedCards, ...stack7.getCards()]));
-            nunStateStacksArray[6] = nunStateStacksArray[6].getNewOurStackFromArray([[...selectedCards, ...nunStateStacksArray[6].getCards()]])
+            nonStateStacksArray[6] = nonStateStacksArray[6].getNewOurStackFromArray([[...selectedCards, ...nonStateStacksArray[6].getCards()]])
             break;
           default:
             if (toPile.indexOf(true) === -1) {
@@ -229,31 +219,31 @@ const Solitaire = () => {
         case 0:
           setStack1(stack1.getNewOurStackFromArray(stack1.getCards().filter(c => stack1.getCards().indexOf(c) > stack1.getCards().indexOf(card))));
 
-          nunStateStacksArray[0] = nunStateStacksArray[0].getNewOurStackFromArray(nunStateStacksArray[0].getCards().filter(c => nunStateStacksArray[0].getCards().indexOf(c) > nunStateStacksArray[0].getCards().indexOf(card)))
+          nonStateStacksArray[0] = nonStateStacksArray[0].getNewOurStackFromArray(nonStateStacksArray[0].getCards().filter(c => nonStateStacksArray[0].getCards().indexOf(c) > nonStateStacksArray[0].getCards().indexOf(card)))
           break;
         case 1:
           setStack2(stack2.getNewOurStackFromArray(stack2.getCards().filter(c => stack2.getCards().indexOf(c) > stack2.getCards().indexOf(card))));
-          nunStateStacksArray[1] = nunStateStacksArray[1].getNewOurStackFromArray(nunStateStacksArray[1].getCards().filter(c => nunStateStacksArray[1].getCards().indexOf(c) > nunStateStacksArray[1].getCards().indexOf(card)))
+          nonStateStacksArray[1] = nonStateStacksArray[1].getNewOurStackFromArray(nonStateStacksArray[1].getCards().filter(c => nonStateStacksArray[1].getCards().indexOf(c) > nonStateStacksArray[1].getCards().indexOf(card)))
           break;
         case 2:
           setStack3(stack3.getNewOurStackFromArray(stack3.getCards().filter(c => stack3.getCards().indexOf(c) > stack3.getCards().indexOf(card))));
-          nunStateStacksArray[2] = nunStateStacksArray[2].getNewOurStackFromArray(nunStateStacksArray[2].getCards().filter(c => nunStateStacksArray[2].getCards().indexOf(c) > nunStateStacksArray[2].getCards().indexOf(card)))
+          nonStateStacksArray[2] = nonStateStacksArray[2].getNewOurStackFromArray(nonStateStacksArray[2].getCards().filter(c => nonStateStacksArray[2].getCards().indexOf(c) > nonStateStacksArray[2].getCards().indexOf(card)))
           break;
         case 3:
           setStack4(stack4.getNewOurStackFromArray(stack4.getCards().filter(c => stack4.getCards().indexOf(c) > stack4.getCards().indexOf(card))));
-          nunStateStacksArray[3] = nunStateStacksArray[3].getNewOurStackFromArray(nunStateStacksArray[3].getCards().filter(c => nunStateStacksArray[3].getCards().indexOf(c) > nunStateStacksArray[3].getCards().indexOf(card)))
+          nonStateStacksArray[3] = nonStateStacksArray[3].getNewOurStackFromArray(nonStateStacksArray[3].getCards().filter(c => nonStateStacksArray[3].getCards().indexOf(c) > nonStateStacksArray[3].getCards().indexOf(card)))
           break;
         case 4:
           setStack5(stack5.getNewOurStackFromArray(stack5.getCards().filter(c => stack5.getCards().indexOf(c) > stack5.getCards().indexOf(card))));
-          nunStateStacksArray[4] = nunStateStacksArray[4].getNewOurStackFromArray(nunStateStacksArray[4].getCards().filter(c => nunStateStacksArray[4].getCards().indexOf(c) > nunStateStacksArray[4].getCards().indexOf(card)))
+          nonStateStacksArray[4] = nonStateStacksArray[4].getNewOurStackFromArray(nonStateStacksArray[4].getCards().filter(c => nonStateStacksArray[4].getCards().indexOf(c) > nonStateStacksArray[4].getCards().indexOf(card)))
           break;
         case 5:
           setStack6(stack6.getNewOurStackFromArray(stack6.getCards().filter(c => stack6.getCards().indexOf(c) > stack6.getCards().indexOf(card))));
-          nunStateStacksArray[5] = nunStateStacksArray[5].getNewOurStackFromArray(nunStateStacksArray[5].getCards().filter(c => nunStateStacksArray[5].getCards().indexOf(c) > nunStateStacksArray[5].getCards().indexOf(card)))
+          nonStateStacksArray[5] = nonStateStacksArray[5].getNewOurStackFromArray(nonStateStacksArray[5].getCards().filter(c => nonStateStacksArray[5].getCards().indexOf(c) > nonStateStacksArray[5].getCards().indexOf(card)))
           break;
         case 6:
           setStack7(stack7.getNewOurStackFromArray(stack7.getCards().filter(c => stack7.getCards().indexOf(c) > stack7.getCards().indexOf(card))));
-          nunStateStacksArray[6] = nunStateStacksArray[6].getNewOurStackFromArray(nunStateStacksArray[6].getCards().filter(c => nunStateStacksArray[6].getCards().indexOf(c) > nunStateStacksArray[6].getCards().indexOf(card)))
+          nonStateStacksArray[6] = nonStateStacksArray[6].getNewOurStackFromArray(nonStateStacksArray[6].getCards().filter(c => nonStateStacksArray[6].getCards().indexOf(c) > nonStateStacksArray[6].getCards().indexOf(card)))
           break;
         default:
           break;
@@ -262,19 +252,19 @@ const Solitaire = () => {
       switch (fromPile.indexOf(true)) {
         case 0:
           setPile1(pile1.filter(c => pile1.indexOf(c) < pile1.indexOf(card)));
-          nunStatePileArray[0] = nunStatePileArray[0].filter(c => nunStatePileArray[0].indexOf(c) < nunStatePileArray[0].indexOf(card))
+          nonStatePileArray[0] = nonStatePileArray[0].filter(c => nonStatePileArray[0].indexOf(c) < nonStatePileArray[0].indexOf(card))
           break;
         case 1:
           setPile2(pile2.filter(c => pile2.indexOf(c) < pile2.indexOf(card)));
-          nunStatePileArray[1] = nunStatePileArray[1].filter(c => nunStatePileArray[1].indexOf(c) < nunStatePileArray[1].indexOf(card))
+          nonStatePileArray[1] = nonStatePileArray[1].filter(c => nonStatePileArray[1].indexOf(c) < nonStatePileArray[1].indexOf(card))
           break;
         case 2:
           setPile3(pile3.filter(c => pile3.indexOf(c) < pile3.indexOf(card)));
-          nunStatePileArray[2] = nunStatePileArray[2].filter(c => nunStatePileArray[2].indexOf(c) < nunStatePileArray[2].indexOf(card))
+          nonStatePileArray[2] = nonStatePileArray[2].filter(c => nonStatePileArray[2].indexOf(c) < nonStatePileArray[2].indexOf(card))
           break;
         case 3:
           setPile4(pile4.filter(c => pile4.indexOf(c) < pile4.indexOf(card)));
-          nunStatePileArray[3] = nunStatePileArray[3].filter(c => nunStatePileArray[3].indexOf(c) < nunStatePileArray[3].indexOf(card))
+          nonStatePileArray[3] = nonStatePileArray[3].filter(c => nonStatePileArray[3].indexOf(c) < nonStatePileArray[3].indexOf(card))
           break;
         default:
           break;
@@ -285,19 +275,22 @@ const Solitaire = () => {
         let newJackpot = JackpotOurStack.getNewOurJackpotFromArray(JackpotOurStack.getCards().filter(c => JackpotOurStack.getCards().indexOf(c) !== JackpotOurStack.getCards().indexOf(selectedCards[0])))
 
         setJackpotOurStack(newJackpot);
-        nunStateJackpot = newJackpot;
+        nonStateJackpot = newJackpot;
 
         console.log("Jackpot cards updated after move");
         console.log("the data that should get in to the jackpot:", newJackpot)
         console.log("Jackpot cards state:");
         console.log(JackpotOurStack)
-
+        console.log(currentGame.getCurrentState());
       }
 
 
       if (toLog) console.log("Stacks, Piles and Jackpot updated after move");  // הדפסה לבדיקת הסטקים, הפיילים וה- jackpot לאחר ניקוי
-
-      updateGame(new GameState(nunStateStacksArray, nunStatePileArray, nunStateJackpot));
+      console.log("CURRENT GAME:" + currentGame.getCurrentState());
+      console.log("Stacks array:" + nonStateStacksArray);
+      console.log("Piles array:" + nonStatePileArray);
+      console.log("Jackpot cards state:" + JackpotOurStack);
+      updateGame(new GameState(nonStateStacksArray, nonStatePileArray, nonStateJackpot));
     }
   }, [numOfClicks]);
 
@@ -309,6 +302,7 @@ const Solitaire = () => {
 
   useEffect(() => {
     if (currentGame !== null) {
+      console.log("NEW CURRENT GAME:" + currentGame.getCurrentState());
       updateStackAndPile();
       console.log("updating the jackpot by the current game");
     }
@@ -331,21 +325,20 @@ const Solitaire = () => {
     setJackpotOurStack(currentGame.getCurrentState().getJackpot());
 
 
-    nunStateStacksArray[0] = currentGame.getCurrentState().getStacks()[0];
-    nunStateStacksArray[1] = currentGame.getCurrentState().getStacks()[1];
-    nunStateStacksArray[2] = currentGame.getCurrentState().getStacks()[2];
-    nunStateStacksArray[3] = currentGame.getCurrentState().getStacks()[3];
-    nunStateStacksArray[4] = currentGame.getCurrentState().getStacks()[4];
-    nunStateStacksArray[5] = currentGame.getCurrentState().getStacks()[5];
-    nunStateStacksArray[6] = currentGame.getCurrentState().getStacks()[6];
+    nonStateStacksArray[0] = currentGame.getCurrentState().getStacks()[0];
+    nonStateStacksArray[1] = currentGame.getCurrentState().getStacks()[1];
+    nonStateStacksArray[2] = currentGame.getCurrentState().getStacks()[2];
+    nonStateStacksArray[3] = currentGame.getCurrentState().getStacks()[3];
+    nonStateStacksArray[4] = currentGame.getCurrentState().getStacks()[4];
+    nonStateStacksArray[5] = currentGame.getCurrentState().getStacks()[5];
+    nonStateStacksArray[6] = currentGame.getCurrentState().getStacks()[6];
 
-    nunStatePileArray[0] = currentGame.getCurrentState().getPiles()[0];
-    nunStatePileArray[1] = currentGame.getCurrentState().getPiles()[1];
-    nunStatePileArray[2] = currentGame.getCurrentState().getPiles()[2];
-    nunStatePileArray[3] = currentGame.getCurrentState().getPiles()[3];
+    nonStatePileArray[0] = currentGame.getCurrentState().getPiles()[0];
+    nonStatePileArray[1] = currentGame.getCurrentState().getPiles()[1];
+    nonStatePileArray[2] = currentGame.getCurrentState().getPiles()[2];
+    nonStatePileArray[3] = currentGame.getCurrentState().getPiles()[3];
 
-    nunStateJackpot = currentGame.getCurrentState().getJackpot();
-
+    nonStateJackpot = currentGame.getCurrentState().getJackpot();
   }
 
   const fetchDeck = async () => {
@@ -365,10 +358,8 @@ const Solitaire = () => {
       const response = await fetch(`https://www.deckofcardsapi.com/api/deck/${id}/draw/?count=52`);
       const data = await response.json();
       setDeck(data.cards);
-      nunStateJackpot = new OurStack(data.cards.slice(0, jackpotNumOfCards));
-      setJackpotOurStack(new OurStack(data.cards.slice(0, jackpotNumOfCards)));
-      setStacksCards(data.cards.slice(jackpotNumOfCards, data.cards.length));
-      // console.log("deck:", data.cards);
+      generateDeck(data.cards, data.cards.slice(jackpotNumOfCards, data.cards.length))
+      console.log("nonStateJackpot: " + nonStateJackpot);
       // console.log("jackpotCards:", data.cards.slice(0, jackpotNumOfCards));
     } catch (error) {
       console.error('Error drawing cards:', error);
@@ -376,6 +367,16 @@ const Solitaire = () => {
   };
 
 
+  const generateDeck = (deck, stacksCards) => {
+    if (stacksCards.length > 0 && deck !== undefined) {
+      // console.log("stacksCards:", stacksCards);  // הדפסה לבדיקת ה- stacksCards
+      generateStacksArrays(stacksCards);
+      generateJackpot(deck);
+      console.log("nonStateJackpot1" + nonStateJackpot);
+      setCurrentGame(new Game(new GameState(nonStateStacksArray, nonStatePileArray, nonStateJackpot)));
+      console.log("nonStateJackpot2" + nonStateJackpot);
+    }
+  }
 
   const generateStacksArrays = (cards) => {
     setStack1(new OurStack(cards.slice(0, 1), 1));
@@ -386,14 +387,22 @@ const Solitaire = () => {
     setStack6(new OurStack(cards.slice(15, 21), 1));
     setStack7(new OurStack(cards.slice(21, 28), 1));
 
-    nunStateStacksArray[0] = new OurStack(cards.slice(0, 1), 1);
-    nunStateStacksArray[1] = new OurStack(cards.slice(1, 3), 1);
-    nunStateStacksArray[2] = new OurStack(cards.slice(3, 6), 1);
-    nunStateStacksArray[3] = new OurStack(cards.slice(6, 10), 1);
-    nunStateStacksArray[4] = new OurStack(cards.slice(10, 15), 1);
-    nunStateStacksArray[5] = new OurStack(cards.slice(15, 21), 1);
-    nunStateStacksArray[6] = new OurStack(cards.slice(21, 28), 1);
+    nonStateStacksArray[0] = new OurStack(cards.slice(0, 1), 1);
+    nonStateStacksArray[1] = new OurStack(cards.slice(1, 3), 1);
+    nonStateStacksArray[2] = new OurStack(cards.slice(3, 6), 1);
+    nonStateStacksArray[3] = new OurStack(cards.slice(6, 10), 1);
+    nonStateStacksArray[4] = new OurStack(cards.slice(10, 15), 1);
+    nonStateStacksArray[5] = new OurStack(cards.slice(15, 21), 1);
+    nonStateStacksArray[6] = new OurStack(cards.slice(21, 28), 1);
   };
+
+
+  const generateJackpot = (cards) => {
+    nonStateJackpot = new OurStack(cards.slice(0, jackpotNumOfCards));
+    setJackpotOurStack(new OurStack(cards.slice(0, jackpotNumOfCards)));
+  }
+
+
 
   const generateStacks = () => {
     const stacks = [];
