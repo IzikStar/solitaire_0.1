@@ -1,5 +1,6 @@
 import { GameState } from "./GameState";
 import { OurStack } from "./OurStack";
+import { GameContext } from '../../App.jsx';
 
 const toLog = false;
 export class Game {
@@ -10,6 +11,8 @@ export class Game {
         this.index = index;
         // console.log(this.currentState);
     }
+
+    
 
     addNewMove(state) {
         // יצירת היסטוריה חדשה עד לאינדקס הנוכחי

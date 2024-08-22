@@ -1,0 +1,78 @@
+/* header.css */
+
+.header {
+    background-color: #fff; /* Adjust as needed */
+    padding: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    position: fixed;
+    top: 0;
+    z-index: 1000;
+  }
+  
+  .navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  
+  .logo {
+    width: 150px;
+  }
+  
+  .button-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .arrow-buttons {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .login-form {
+    display: flex;
+    align-items: center;
+  }
+  
+  /* Media Queries */
+  
+  @media (max-width: 768px) {
+    .navbar {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  
+    .button-group {
+      width: 100%;
+      justify-content: center;
+      margin-bottom: 10px;
+    }
+  
+    .arrow-buttons {
+      gap: 5px;
+    }
+  
+    .login-form {
+      width: 100%;
+      text-align: center;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .logo {
+      width: 120px;
+    }
+  
+    .button-group {
+      flex-direction: column;
+      gap: 10px;
+    }
+  
+    .arrow-buttons {
+      flex-direction: column;
+    }
+  }
+  

@@ -15,7 +15,7 @@ const Solitaire = () => {
 
   const [deckId, setDeckId] = useState(null);
 
-  const { deck, setDeck, selectedCard, numOfClicks, numOfNewGame, setNumOfNewGame, currentGame, setCurrentGame, numOfRestarts } = useContext(GameContext);
+  const { deck, setDeck, selectedCard, numOfClicks, numOfNewGame, setNumOfNewGame, currentGame, setCurrentGame, numOfRestarts, setIsWinning } = useContext(GameContext);
 
   const [numOfTurns, setNumOfTurns] = useState(0);
 
@@ -36,7 +36,7 @@ const Solitaire = () => {
 
   const stacksArray = [stack1, stack2, stack3, stack4, stack5, stack6, stack7]
   const pileArray = [pile1, pile2, pile3, pile4];
-  
+
 
   let nonStateStacksArray;
   let nonStatePileArray;
@@ -321,11 +321,25 @@ const Solitaire = () => {
     }
   }, [currentGame])
 
-  useEffect(() => {   
+  useEffect(() => {
     if (numOfTurns > 0) {
       updateGame(new GameState(stacksArray, pileArray, JackpotOurStack, numOfTurns));
-    } 
+    }
   }, [numOfTurns])
+  
+  useEffect(() => {
+    if (numOfTurns > 0) {
+      winning();
+    }
+  }, [currentGame]);
+
+
+
+  const winning = () => {
+    if (currentGame.getCurrentState().getIsWinning()) {
+      setIsWinning(true);
+    }
+  }
 
   const updateStackAndPile = () => {
     setStack1(currentGame.getCurrentState().getStacks()[0]);

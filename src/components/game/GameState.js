@@ -24,6 +24,15 @@ export class GameState {
         return this.piles;
     }
 
+    getIsWinning() {
+        for (let index = 0; index < this.piles.length; index++) {
+            if (this.piles[index].length < 13 ) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     toString() {
         return `\nStacks:\n${this.stacks !== undefined ? this.stacks : 'undefined'}, 
         \nPiles:\n${this.piles !== undefined ? this.piles : 'undefined'},

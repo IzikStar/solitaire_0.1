@@ -17,6 +17,7 @@ function App() {
   const [numOfRestarts, setNumOfRestarts] = useState(0);
   const [currentGame, setCurrentGame] = useState(null);
   const [BackGroundImage, setBackGroundImage] = useState(0);
+  const [isWinning, setIsWinning] = useState(false);
   // כל הפונקציות והמצב של המשחק
   const gameState = {
     deck,
@@ -34,7 +35,9 @@ function App() {
     numOfRestarts,
     setNumOfRestarts,
     BackGroundImage,
-    setBackGroundImage
+    setBackGroundImage,
+    isWinning,
+    setIsWinning,
   };
 
   return (

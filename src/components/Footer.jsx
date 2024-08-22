@@ -20,19 +20,29 @@ const FooterContainer = styled.footer`
   width: 100%;
   animation: ${fadeIn} 1s ease-out;
   box-shadow: 0 -2px 10px rgba(0, 255, 255, 0.3);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 `;
 
 const FooterContent = styled.div`
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
   align-items: center;
-  flex-wrap: wrap;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  @media (min-width: 768px) {
+    flex-direction: row;
+    justify-content: space-between;
+  }
 `;
 
 const FooterLink = styled.a`
   color: #0af;
   text-decoration: none;
-  margin: 0 10px;
+  margin: 5px 10px;
   transition: color 0.3s ease-in-out;
 
   &:hover {
@@ -44,15 +54,28 @@ const FooterLogo = styled.div`
   font-size: 24px;
   font-weight: bold;
   color: #00ffff;
+  margin-bottom: 10px;
+
+  @media (min-width: 768px) {
+    margin-bottom: 0;
+  }
 `;
 
 const FooterText = styled.p`
-  margin-top: 10px;
+  margin: 10px 0;
   color: #aaa;
+  font-size: 14px;
+
+  @media (max-width: 600px) {
+    font-size: 12px;
+  }
 `;
 
 const SocialIcons = styled.div`
-  margin-top: 10px;
+  margin: 10px 0;
+  display: flex;
+  justify-content: center;
+
   & > a {
     margin: 0 10px;
     font-size: 20px;
@@ -65,6 +88,8 @@ const SocialIcons = styled.div`
     }
   }
 `;
+
+// רכיב הפוטר
 
 const Footer = () => {
   return (

@@ -11,7 +11,7 @@ import { FaHome, FaUser, FaCog, FaSignOutAlt, FaRocket  } from 'react-icons/fa';
 
 const Header = (props) => {
 
-    const { setSelectedCard, setNumOfClicks, setNumOfNewGame, numOfNewGame, currentGame, setCurrentGame, setNumOfRestarts, setBackGroundImage } = useContext(GameContext);
+    const { setSelectedCard, setNumOfClicks, setNumOfNewGame, numOfNewGame, currentGame, setCurrentGame, setNumOfRestarts, setBackGroundImage, setIsWinning } = useContext(GameContext);
 
     const menuItems = [
         { icon: <FaRocket  />, label: 'New game', onClick: () => fancyButtonFunction() },
@@ -21,6 +21,7 @@ const Header = (props) => {
     ];
 
     const newGame = () => {
+        setIsWinning(false)
         setNumOfClicks(0);
         setNumOfNewGame(numOfNewGame + 1);
         setSelectedCard(null);
@@ -36,6 +37,7 @@ const Header = (props) => {
         newBackground();
     }
     const restartGame = () => {
+        setIsWinning(false)
         setNumOfRestarts(prev => prev + 1);
     }
 
@@ -47,8 +49,8 @@ const Header = (props) => {
                 <div className='flex w-[400px] justify-content-between' >
                     <Button icon='undo' onClick={restartGame} />
                     <div className='flex w-[200px] justify-content-evenly'>
-                        <Button icon='arrow-left' onClick={() => setCurrentGame(currentGame.undo())} />
-                        <Button icon='arrow-right' onClick={() => setCurrentGame(currentGame.redo())} />
+                        <Button icon='arrow-left' onClick={() => {setCurrentGame(currentGame.undo()); setIsWinning(false)}} />
+                        <Button icon='arrow-right' onClick={() => {setCurrentGame(currentGame.redo()); setIsWinning(false)}} />
                     </div>
                     <Button icon='lightbulb' />
                 </div>
