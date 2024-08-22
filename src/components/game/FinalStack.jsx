@@ -4,7 +4,11 @@ import Card from './Card'
 const FinalStack = (props) => {
 
   const generateImage = (cards) => {
-    if(cards.length > 0) return <Card image={cards[cards.length-1].image} value={cards[cards.length-1].value} suit={cards[cards.length-1].suit} code={cards[cards.length-1].code} flipped={true} key={cards[cards.length-1].code} /> 
+    if(cards.length > 0){
+      return (cards.map((card, index) => {
+        <Card image={card.image} value={card.value} suit={card.suit} code={card.code} flipped={true} key={card.code} />     
+      }))
+    }
     return <img src="\images\suits.webp" alt="resomething" />
   }
 
