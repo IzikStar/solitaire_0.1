@@ -1,19 +1,29 @@
 import React from 'react'
 import Card from './Card'
+import './Game.css';
 
 const FinalStack = (props) => {
 
   const generateImage = (cards) => {
-    if(cards.length > 0){
-      return (cards.map((card, index) => {
-        <Card image={card.image} value={card.value} suit={card.suit} code={card.code} flipped={true} key={card.code} />     
-      }))
+    if (cards.length > 0) {
+      return (cards.map((card, idx) => (
+        <div key={card.code + idx} className="card" style={{ zIndex: idx }}>
+          <Card
+            key={card.code}
+            code={card.code}
+            image={card.image}
+            value={card.value}
+            suit={card.suit}
+            flipped={true} // הוספת אירוע להסרת קלף פתוח
+          />
+        </div>
+      )))
     }
     return <img src="\images\suits.webp" alt="resomething" />
   }
 
   return (
-    <div className="mx-[20px] h-[128px] w-[96px] border-1 rounded-2 border-light bg-light cursor-pointer ">
+    <div className="card-stack">
       {generateImage(props.cards)}
     </div>
   )

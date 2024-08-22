@@ -87,6 +87,7 @@ const Solitaire = () => {
       if (toLog) console.log("card from deck:", card);  // הדפסה לבדיקת הקלף שנבחר מהחפיסה
 
       // אתחול משתנים
+      let validMove = false;
       const fromStack = new Array(7);
       const fromPile = new Array(4);
       let fromJackpot = false;
@@ -172,18 +173,22 @@ const Solitaire = () => {
       // תנועות לקלפים בתוך הפייל
       switch (getRandomIndex(toPile, true)) {
         case 0:
+          validMove = true;
           setPile1(prevPile => [...prevPile, selectedCards[0]]);
           nonStatePileArray[0].push(selectedCards[0]);
           break;
         case 1:
+          validMove = true;
           setPile2(prevPile => [...prevPile, selectedCards[0]]);
           nonStatePileArray[1].push(selectedCards[0]);
           break;
         case 2:
+          validMove = true;
           setPile3(prevPile => [...prevPile, selectedCards[0]]);
           nonStatePileArray[2].push(selectedCards[0]);
           break;
         case 3:
+          validMove = true;
           setPile4(prevPile => [...prevPile, selectedCards[0]]);
           nonStatePileArray[3].push(selectedCards[0]);
           break;
@@ -195,29 +200,36 @@ const Solitaire = () => {
       if (toPile.indexOf(true) === -1) {
         switch (getRandomIndex(toStack, true)) {
           case 0:
+            validMove = true;
             setStack1(stack1.getNewOurStackFromArray([...selectedCards, ...stack1.getCards()]));
             nonStateStacksArray[0] = nonStateStacksArray[0].getNewOurStackFromArray([[...selectedCards, ...nonStateStacksArray[0].getCards()]])
             break;
           case 1:
+            validMove = true;
             setStack2(stack2.getNewOurStackFromArray([...selectedCards, ...stack2.getCards()]));
             nonStateStacksArray[1] = nonStateStacksArray[1].getNewOurStackFromArray([[...selectedCards, ...nonStateStacksArray[1].getCards()]])
             break;
           case 2:
+            validMove = true;
             setStack3(stack3.getNewOurStackFromArray([...selectedCards, ...stack3.getCards()]));
             nonStateStacksArray[2] = nonStateStacksArray[2].getNewOurStackFromArray([[...selectedCards, ...nonStateStacksArray[2].getCards()]])
             break;
           case 3:
+            validMove = true;
             setStack4(stack4.getNewOurStackFromArray([...selectedCards, ...stack4.getCards()])); nonStateStacksArray[3] = nonStateStacksArray[3].getNewOurStackFromArray([[...selectedCards, ...nonStateStacksArray[3].getCards()]])
             break;
           case 4:
+            validMove = true;
             setStack5(stack5.getNewOurStackFromArray([...selectedCards, ...stack5.getCards()]));
             nonStateStacksArray[4] = nonStateStacksArray[4].getNewOurStackFromArray([[...selectedCards, ...nonStateStacksArray[4].getCards()]])
             break;
           case 5:
+            validMove = true;
             setStack6(stack6.getNewOurStackFromArray([...selectedCards, ...stack6.getCards()]));
             nonStateStacksArray[5] = nonStateStacksArray[5].getNewOurStackFromArray([[...selectedCards, ...nonStateStacksArray[5].getCards()]])
             break;
           case 6:
+            validMove = true;
             setStack7(stack7.getNewOurStackFromArray([...selectedCards, ...stack7.getCards()]));
             nonStateStacksArray[6] = nonStateStacksArray[6].getNewOurStackFromArray([[...selectedCards, ...nonStateStacksArray[6].getCards()]])
             break;
@@ -303,7 +315,9 @@ const Solitaire = () => {
 
       if (toLog) console.log("Stacks, Piles and Jackpot updated after move");  // הדפסה לבדיקת הסטקים, הפיילים וה- jackpot לאחר ניקוי
       // console.log("CURRENT GAME:" + currentGame.getCurrentState());
-      setNumOfTurns(prev => prev + 1)
+      if (validMove) {
+        setNumOfTurns(prev => prev + 1)
+      }
     }
   }, [numOfClicks]);
 
@@ -326,7 +340,7 @@ const Solitaire = () => {
       updateGame(new GameState(stacksArray, pileArray, JackpotOurStack, numOfTurns));
     }
   }, [numOfTurns])
-  
+
   useEffect(() => {
     if (numOfTurns > 0) {
       winning();
@@ -338,6 +352,9 @@ const Solitaire = () => {
   const winning = () => {
     if (currentGame.getCurrentState().getIsWinning()) {
       setIsWinning(true);
+    }
+    else {
+      setIsWinning(false);
     }
   }
 

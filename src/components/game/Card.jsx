@@ -22,10 +22,10 @@ const Card = ({ image, value, suit, flipped, code }) => {
   useEffect(() => {
     if (isAnimating) {
       gsap.to(cardRef.current, {
-        x: Math.random() * 1000 - 500,
-        y: Math.random() * 1000 - 500,
+        x: Math.random() * 1000 - 590,
+        y: Math.random() * 1000 - 590,
         scale: 1.2,
-        duration: 20,
+        duration: 10,
         ease: "power2.out",
         repeat: 1,
         yoyo: true,
