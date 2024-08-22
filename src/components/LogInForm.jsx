@@ -39,6 +39,10 @@ const Modal = styled.div`
   width: 300px;
   animation: ${slideIn} 0.5s ease-out;
   z-index: 1001;
+
+  @media (max-width: 768px) {
+    width: 80%;
+  }
 `;
 
 const Input = styled.input`
@@ -75,6 +79,10 @@ const Button = styled.button`
 
 const LoginButton = styled(Button)`
   margin: 20px;
+
+  @media (max-width: 768px) {
+    margin: 10px;
+  }
 `;
 
 const LoginForm = () => {
@@ -93,27 +101,27 @@ const LoginForm = () => {
 
   return (
     <>
-      <LoginButton onClick={toggleModal}>התחבר</LoginButton>
+      <LoginButton onClick={toggleModal}>login</LoginButton>
       <Overlay isOpen={isOpen} onClick={toggleModal} />
       {isOpen && (
         <Modal>
           <form onSubmit={handleLogin}>
-            <h2 style={{ color: '#0af', textAlign: 'center' }}>התחברות</h2>
+            <h2 style={{ color: '#0af', textAlign: 'center' }}>login</h2>
             <Input
               type="text"
-              placeholder="שם משתמש או אימייל"
+              placeholder="Username or email"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               required
             />
             <Input
               type="password"
-              placeholder="סיסמא"
+              placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
             />
-            <Button type="submit">התחבר</Button>
+            <Button type="submit">Sign in</Button>
           </form>
         </Modal>
       )}

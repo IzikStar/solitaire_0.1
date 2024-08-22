@@ -70,7 +70,7 @@ const Footer = () => {
   return (
     <FooterContainer>
       <FooterContent>
-        <FooterLogo>FutureCorp</FooterLogo>
+        <FooterLogo>Solitaire_5.0</FooterLogo>
         <div>
           <FooterLink href="#about">About</FooterLink>
           <FooterLink href="#services">Services</FooterLink>
@@ -82,7 +82,8 @@ const Footer = () => {
           <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer">📸</a>
         </SocialIcons>
       </FooterContent>
-      <FooterText>&copy; 2024 FutureCorp. All rights reserved.</FooterText>
+      <FooterText>2024 AssafAndItschak@gmail.kings</FooterText>
+      <FooterText>&copy; All rights reserved.</FooterText>
     </FooterContainer>
   );
 };

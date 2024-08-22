@@ -430,7 +430,7 @@ const Solitaire = () => {
 
   return (
     <>
-      <main className='w-[1200px] h-[1300px] mt-3'>
+      <main className='w-[1200px] h-[730px]'>
         <section className='w-[full] flex-row flex rounded-2'>
           <div className='w-[50%] h-[full] rounded-2 '>
             <Jackpot cards={JackpotOurStack} />
