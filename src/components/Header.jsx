@@ -5,7 +5,7 @@ import Fancy3Buttons from './basic/Fancy3Buttons';
 import { GameContext } from '../App.jsx';
 import LoginForm from './LogInForm.jsx';
 import StyledBurgerMenu from './basic/StyledBurgerMenu.jsx';
-import { FaHome, FaUser, FaCog, FaSignOutAlt, FaRocket  } from 'react-icons/fa'; // ייבוא אייקונים
+import { FaUser, FaCog, FaSignOutAlt, FaRocket  } from 'react-icons/fa'; // ייבוא אייקונים
 
 
 

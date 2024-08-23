@@ -43,7 +43,6 @@ const Card = ({ image, value, suit, flipped, code }) => {
       console.log('Clicked');
       setSelectedCard(code);
       setNumOfClicks(numOfClicks + 1);
-      setIsAnimating(true);
     }
   };
 

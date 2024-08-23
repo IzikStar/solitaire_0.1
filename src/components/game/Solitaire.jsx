@@ -347,8 +347,6 @@ const Solitaire = () => {
     }
   }, [currentGame]);
 
-
-
   const winning = () => {
     if (currentGame.getCurrentState().getIsWinning()) {
       setIsWinning(true);
