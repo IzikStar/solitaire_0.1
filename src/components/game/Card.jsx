@@ -21,11 +21,14 @@ const Card = ({ image, value, suit, flipped, code }) => {
 
   useEffect(() => {
     if (isAnimating) {
+      const maxX = window.innerWidth - cardRef.current.offsetWidth;
+      const maxY = window.innerHeight - cardRef.current.offsetHeight - 150; // מונע חפיפה עם ההדר
+
       gsap.to(cardRef.current, {
-        x: Math.random() * 1000 - 590,
-        y: Math.random() * 1000 - 590,
+        x: Math.random() * maxX - maxX / 2,
+        y: Math.random() * maxY - maxY / 2,
         scale: 1.2,
-        duration: 10,
+        duration: 5, // משך זמן קצר יותר
         ease: "power2.out",
         repeat: 1,
         yoyo: true,
@@ -35,14 +38,36 @@ const Card = ({ image, value, suit, flipped, code }) => {
   }, [isAnimating]);
 
   useEffect(() => {
-      setIsAnimating(isWinning);
-  }, [isWinning])
+    setIsAnimating(isWinning);
+  }, [isWinning]);
 
   const handleCardClick = () => {
     if (flipped) {
       console.log('Clicked');
       setSelectedCard(code);
       setNumOfClicks(numOfClicks + 1);
+    }
+  };
+
+  const handleShake = () => {
+    if (cardRef.current) {
+      gsap.fromTo(
+        cardRef.current, 
+        { x: -5 }, 
+        { 
+          x: 5, 
+          duration: 0.1, 
+          ease: "power1.inOut", 
+          yoyo: true, 
+          repeat: 5, 
+          onComplete: () => {
+            gsap.set(cardRef.current, {
+              x: 0,
+              y: 0,
+            });
+          }
+        }
+      );
     }
   };
 
@@ -58,6 +83,7 @@ const Card = ({ image, value, suit, flipped, code }) => {
       style={{
         cursor: flipped ? 'pointer' : 'default',
         zIndex: isDragging ? 999 : 'auto',
+        position: 'relative',
       }}
       onClick={handleCardClick}
     >
@@ -66,6 +92,23 @@ const Card = ({ image, value, suit, flipped, code }) => {
         alt={flipped ? `${value} of ${suit}` : "Card Back"}
         className="w-full h-full rounded-md"
       />
+      {flipped && (
+        <button 
+          onClick={handleShake} 
+          style={{
+            position: 'absolute',
+            top: '0',
+            left: '0',
+            width: '100%',
+            height: '100%',
+            opacity: 0,
+            cursor: 'pointer',
+          }}
+          onMouseEnter={(e) => e.currentTarget.style.opacity = 1}
+          onMouseLeave={(e) => e.currentTarget.style.opacity = 0}
+        >
+        </button>
+      )}
     </div>
   );
 };
