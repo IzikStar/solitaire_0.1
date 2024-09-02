@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import Home from './pages/Home';
+import Test from './components/Test'
 import './App.css';
 
 // הגדרת הקונטקסט
