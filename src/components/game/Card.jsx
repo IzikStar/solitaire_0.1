@@ -2,7 +2,7 @@ import { useState, useEffect, useContext, useRef } from 'react';
 import { useDrag } from 'react-dnd';
 import { ItemTypes } from './Solitaire';
 import { GameContext } from '../../App.jsx';
-import 'p5/lib/addons/p5.sound';
+import { playSound } from '../music.js';
 import gsap from 'gsap';
 
 const Card = ({ image, value, suit, flipped, code }) => {
@@ -19,29 +19,16 @@ const Card = ({ image, value, suit, flipped, code }) => {
   const cardRef = useRef(null);
   const p5InstanceRef = useRef(null);
 
-  const startMusic = () => {
-    if (p5InstanceRef.current) return;
-
-    let song;
-
-    const sketch = (p) => {
-      p.preload = () => {
-        // טוען את קובץ האודיו מהתיקייה public
-        song = p.loadSound('/public/sounds/selectPieceSound1.wav', () => {
-          // אם הטעינה הצליחה, ננגן את האודיו
-          song.play();
-        }, (error) => {
-          // טיפול בטעויות
-          console.error('Error loading sound:', error);
-        });
-      };
-
-      p.setup = () => {
-        // מבצע את הפעולה הנוספת לאחר ההגדרה
-      };
-    };
-
-    p5InstanceRef.current = new p5(sketch);
+  // הפונקציה שמפעילה את הסאונד
+  const handlePlaySound = () => {
+    playSound('/public/sounds/selectPieceSound1.wav', 
+      (song) => {
+        console.log('Sound loaded and playing', song);
+      }, 
+      (error) => {
+        console.error('Failed to load sound:', error);
+      }
+    );
   };
 
   const [isAnimating, setIsAnimating] = useState(isWinning);
@@ -73,7 +60,7 @@ const Card = ({ image, value, suit, flipped, code }) => {
       console.log('Clicked');
       setSelectedCard(code);
       setNumOfClicks(numOfClicks + 1);
-      startMusic();
+      handlePlaySound(); // הפעלת הסאונד
     }
   };
 

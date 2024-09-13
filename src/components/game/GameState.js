@@ -25,8 +25,8 @@ export class GameState {
     }
 
     getIsWinning() {
-        for (let index = 0; index < this.piles.length - 3; index++) {
-            if (this.piles[index].length < 1 ) {
+        for (let index = 0; index < this.piles.length; index++) {
+            if (this.piles[index].length < 13 ) {
                 return false;
             }
         }

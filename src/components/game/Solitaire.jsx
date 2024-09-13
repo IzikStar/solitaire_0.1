@@ -9,13 +9,14 @@ import FinalStack from './FinalStack.jsx';
 import { OurStack } from './OurStack.js';
 import { Game } from './Game.js';
 import { GameState } from './GameState.js';
+import { playSound } from '../music.js';
 
 const Solitaire = () => {
   const toLog = false;  // הגדרת המשתנה בתחילת הפונקציה
 
   const [deckId, setDeckId] = useState(null);
 
-  const { deck, setDeck, selectedCard, numOfClicks, numOfNewGame, setNumOfNewGame, currentGame, setCurrentGame, numOfRestarts, setIsWinning } = useContext(GameContext);
+  const { deck, setDeck, selectedCard, numOfClicks, numOfNewGame, setNumOfNewGame, currentGame, setCurrentGame, numOfRestarts, setIsWinning, isWinning } = useContext(GameContext);
 
   const [numOfTurns, setNumOfTurns] = useState(0);
 
@@ -78,6 +79,19 @@ const Solitaire = () => {
       drawDeck(deckId);
     }
   }, [deckId]);
+
+  useEffect(() => {
+    if (isWinning) {
+      playSound('/public/sounds/winningSound1.wav', 
+        (song) => {
+          console.log('Sound loaded and playing', song);
+        }, 
+        (error) => {
+          console.error('Failed to load sound:', error);
+        }
+      );
+    }
+  }, [isWinning]);
 
   // השפעות על שינוי ב- selectedCard
   useEffect(() => {
