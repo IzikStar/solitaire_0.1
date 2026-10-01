@@ -82,7 +82,7 @@ const Solitaire = () => {
 
   useEffect(() => {
     if (isWinning) {
-      playSound('/public/sounds/winningSound1.wav', 
+      playSound('/sounds/winningSound1.wav', 
         (song) => {
           console.log('Sound loaded and playing', song);
         }, 

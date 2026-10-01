@@ -12,7 +12,7 @@ const AudioPlayer = () => {
     const sketch = (p) => {
       p.preload = () => {
         // טוען את קובץ האודיו מהתיקייה public
-        song = p.loadSound('/public/sounds/goBackSound2.wav', () => {
+        song = p.loadSound('/sounds/goBackSound2.wav', () => {
           // אם הטעינה הצליחה, ננגן את האודיו
           song.play();
         }, (error) => {
