@@ -20,7 +20,7 @@ const GameStack = ({ stack, index, state, metrics, hint, onPlay, onDrop }) => {
   const placed = [];
   for (let i = cards.length - 1; i >= 0; i--) {
     const up = i < open;
-    placed.push({ card: cards[i], up, y });
+    placed.push({ card: cards[i], up, y, covered: i > 0 });
     y += up ? openOffset : metrics.hiddenOffset;
   }
   const height = placed.length ? placed[placed.length - 1].y + metrics.ch : metrics.ch;
@@ -36,13 +36,14 @@ const GameStack = ({ stack, index, state, metrics, hint, onPlay, onDrop }) => {
       <div className={`slot absolute inset-x-0 top-0 ${active || isTarget ? 'slot-active' : ''}`} style={{ height: metrics.ch }}>
         <span className="slot-mark">K</span>
       </div>
-      {placed.map(({ card, up, y: top }) => (
+      {placed.map(({ card, up, y: top, covered }) => (
         <Card
           key={card.code}
           code={card.code}
           faceUp={up}
           onPlay={onPlay}
           highlighted={hint?.code === card.code}
+          covered={covered}
           style={{ position: 'absolute', left: 0, top }}
         />
       ))}

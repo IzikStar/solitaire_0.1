@@ -107,7 +107,7 @@ body {
   }
   .card-court {
     position: absolute;
-    inset: 25% 19% 22% 19%;
+    inset: 31% 19% 21% 19%;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -116,6 +116,9 @@ body {
     border: 1.5px solid color-mix(in srgb, currentColor 35%, transparent);
     background: color-mix(in srgb, currentColor 7%, transparent);
   }
+  /* only the corner strip of a covered card is visible */
+  .card-covered .card-court,
+  .card-covered .card-pip { visibility: hidden; }
   .card-court-rank {
     font-family: Georgia, 'Times New Roman', serif;
     font-size: calc(var(--cw) * 0.36);
@@ -168,7 +171,6 @@ body {
     font-weight: 700;
     color: rgb(255 255 255 / 0.16);
   }
-  .slot-mark-suit { font-family: inherit; font-size: calc(var(--cw) * 0.44); }
   .slot-icon {
     width: calc(var(--cw) * 0.38);
     height: calc(var(--cw) * 0.38);

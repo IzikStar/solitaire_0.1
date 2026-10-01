@@ -44,7 +44,7 @@ export const CardBack = () => <div className="card-back" aria-hidden="true" />;
  * A playing card. Face-up cards are buttons (click / Enter to auto-move) and
  * can be dragged onto a column or foundation on desktop.
  */
-const Card = ({ code, faceUp, onPlay, highlighted, style }) => {
+const Card = ({ code, faceUp, onPlay, highlighted, covered, style }) => {
   const ref = useRef(null);
   const [{ isDragging }, dragRef] = useDrag(
     () => ({
@@ -88,7 +88,7 @@ const Card = ({ code, faceUp, onPlay, highlighted, style }) => {
           play();
         }
       }}
-      className={`card card-up ${onPlay ? 'card-playable' : ''} ${highlighted ? 'card-hint' : ''} ${
+      className={`card card-up ${covered ? 'card-covered' : ''} ${onPlay ? 'card-playable' : ''} ${highlighted ? 'card-hint' : ''} ${
         isDragging ? 'opacity-40' : ''
       }`}
       style={style}
