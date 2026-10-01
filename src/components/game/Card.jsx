@@ -1,129 +1,99 @@
-import { useState, useEffect, useContext, useRef } from 'react';
+import { useRef } from 'react';
 import { useDrag } from 'react-dnd';
-import { ItemTypes } from './Solitaire';
-import { GameContext } from '../../App.jsx';
-import { playSound } from '../music.js';
 import gsap from 'gsap';
 
-const Card = ({ image, value, suit, flipped, code }) => {
-  const { setSelectedCard, numOfClicks, setNumOfClicks, isWinning } = useContext(GameContext);
-  const [{ isDragging }, dragRef] = useDrag(() => ({
-    type: ItemTypes.CARD,
-    item: { value, suit },
-    canDrag: () => flipped,
-    collect: (monitor) => ({
-      isDragging: !!monitor.isDragging(),
+export const CARD = 'card';
+
+const SUIT_GLYPH = { H: '♥︎', D: '♦︎', S: '♠︎', C: '♣︎' };
+const SUIT_NAME = { H: 'hearts', D: 'diamonds', S: 'spades', C: 'clubs' };
+const RANK = { A: 'A', 0: '10', J: 'J', Q: 'Q', K: 'K' };
+const RANK_NAME = { A: 'Ace', 0: '10', J: 'Jack', Q: 'Queen', K: 'King' };
+
+const cardLabel = (code) => `${RANK_NAME[code[0]] ?? code[0]} of ${SUIT_NAME[code[1]]}`;
+
+const CardFace = ({ code }) => {
+  const rank = RANK[code[0]] ?? code[0];
+  const suit = SUIT_GLYPH[code[1]];
+  const red = code[1] === 'H' || code[1] === 'D';
+  const court = 'JQK'.includes(code[0]);
+  return (
+    <div className={`card-face ${red ? 'text-[#c4262e]' : 'text-slate-900'}`}>
+      <span className="card-corner">
+        {rank}
+        <span className="card-corner-suit">{suit}</span>
+      </span>
+      {court ? (
+        <span className="card-court">
+          <span className="card-court-rank">{rank}</span>
+          <span className="card-court-suit">{suit}</span>
+        </span>
+      ) : (
+        <span className="card-pip">{suit}</span>
+      )}
+      <span className="card-corner card-corner-bottom" aria-hidden="true">
+        {rank}
+        <span className="card-corner-suit">{suit}</span>
+      </span>
+    </div>
+  );
+};
+
+export const CardBack = () => <div className="card-back" aria-hidden="true" />;
+
+/**
+ * A playing card. Face-up cards are buttons (click / Enter to auto-move) and
+ * can be dragged onto a column or foundation on desktop.
+ */
+const Card = ({ code, faceUp, onPlay, highlighted, style }) => {
+  const ref = useRef(null);
+  const [{ isDragging }, dragRef] = useDrag(
+    () => ({
+      type: CARD,
+      item: { code },
+      canDrag: () => !!(faceUp && onPlay),
+      collect: (monitor) => ({ isDragging: monitor.isDragging() }),
     }),
-  }), [flipped]);
+    [code, faceUp, onPlay],
+  );
 
-  const cardRef = useRef(null);
-  const p5InstanceRef = useRef(null);
+  const play = () => {
+    if (!onPlay) return;
+    if (!onPlay(code) && ref.current) {
+      gsap.fromTo(ref.current, { x: -4 }, { x: 4, duration: 0.06, repeat: 5, yoyo: true, clearProps: 'x' });
+    }
+  };
 
-  // הפונקציה שמפעילה את הסאונד
-  const handlePlaySound = () => {
-    playSound('/sounds/selectPieceSound1.wav', 
-      (song) => {
-        console.log('Sound loaded and playing', song);
-      }, 
-      (error) => {
-        console.error('Failed to load sound:', error);
-      }
+  if (!faceUp) {
+    return (
+      <div className="card" style={style}>
+        <CardBack />
+      </div>
     );
-  };
-
-  const [isAnimating, setIsAnimating] = useState(isWinning);
-
-  useEffect(() => {
-    if (isAnimating) {
-      const maxX = window.innerWidth - cardRef.current.offsetWidth - 750;
-      const maxY = window.innerHeight - cardRef.current.offsetHeight - 750; // מונע חפיפה עם ההדר
-
-      gsap.to(cardRef.current, {
-        x: Math.random() * maxX - maxX / 2,
-        y: Math.random() * maxY - maxY / 2,
-        scale: 1.2,
-        duration: 5, // משך זמן קצר יותר
-        ease: "power2.out",
-        repeat: 1,
-        yoyo: true,
-        onComplete: () => setIsAnimating(false),
-      });
-    }
-  }, [isAnimating]);
-
-  useEffect(() => {
-    setIsAnimating(isWinning);
-  }, [isWinning]);
-
-  const handleCardClick = () => {
-    if (flipped) {
-      console.log('Clicked');
-      setSelectedCard(code);
-      setNumOfClicks(numOfClicks + 1);
-      handlePlaySound(); // הפעלת הסאונד
-    }
-  };
-
-  const handleShake = () => {
-    if (cardRef.current) {
-      gsap.fromTo(
-        cardRef.current, 
-        { x: -5 }, 
-        { 
-          x: 5, 
-          duration: 0.1, 
-          ease: "power1.inOut", 
-          yoyo: true, 
-          repeat: 5, 
-          onComplete: () => {
-            gsap.set(cardRef.current, {
-              x: 0,
-              y: 0,
-            });
-          }
-        }
-      );
-    }
-  };
-
-  const backImage = "https://www.deckofcardsapi.com/static/img/back.png";
+  }
 
   return (
     <div
       ref={(node) => {
+        ref.current = node;
         dragRef(node);
-        cardRef.current = node;
       }}
-      className={`card ${isDragging ? 'dragging' : ''}`}
-      style={{
-        cursor: flipped ? 'pointer' : 'default',
-        zIndex: isDragging ? 999 : 'auto',
-        position: 'relative',
+      role={onPlay ? 'button' : undefined}
+      tabIndex={onPlay ? 0 : undefined}
+      aria-label={cardLabel(code)}
+      data-card={code}
+      onClick={play}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          play();
+        }
       }}
-      onClick={handleCardClick}
+      className={`card card-up ${onPlay ? 'card-playable' : ''} ${highlighted ? 'card-hint' : ''} ${
+        isDragging ? 'opacity-40' : ''
+      }`}
+      style={style}
     >
-      <img
-        src={flipped ? image : backImage}
-        alt={flipped ? `${value} of ${suit}` : "Card Back"}
-        className="w-full h-full rounded-md"
-      />
-      {flipped && (
-        <button 
-          onClick={handleShake} 
-          style={{
-            position: 'absolute',
-            top: '0',
-            left: '0',
-            width: '100%',
-            height: '100%',
-            opacity: 0,
-            cursor: 'pointer',
-          }}
-          onMouseEnter={(e) => e.currentTarget.style.opacity = 1}
-          onMouseLeave={(e) => e.currentTarget.style.opacity = 0}
-        >
-        </button>
-      )}
+      <CardFace code={code} />
     </div>
   );
 };

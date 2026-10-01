@@ -1,62 +1,50 @@
-import React, { useState, useEffect, useContext } from 'react';
-import './Game.css';
-import Card from './Card';
-import { GameContext } from '../../App';
+import { LuRotateCcw } from 'react-icons/lu';
+import Card, { CardBack } from './Card';
 
-const Jackpot = ({cards}) => {
-    const toLog = true; // משתנה לבדיקת הדפסות
-    
-    const { currentGame, setCurrentGame } = useContext(GameContext) 
-    const [closeCards,setClosedCards] = useState(cards.getCloseCards());
-    const [openCards, setOpenCards] = useState(cards.getOpenCards());
-
-    useEffect(()=> {
-        setClosedCards(cards.getCloseCards());
-        setOpenCards(cards.getOpenCards());
-    },[cards])
-
-    const revealNextCard = () => {
-        console.log("reaviling next card");
-        setCurrentGame(currentGame.addNewMoveFromJackpot())
-    };
-
-    const closeCardsGenerator = () => {
-        if (closeCards.length === 0) {
-            return (
-                <div className="h-[128px] w-[96px] border-1 rounded-2 border-light bg-light opacity-[80%] mx-2 cursor-pointer" onClick={revealNextCard}>
-                    <img src="\images\redeal.webp" alt="redeal" />
-                </div>
-            );
-        } else {
-            return (
-                <div className="w-24 h-32 cursor-pointer relative mx-2" onClick={revealNextCard}>
-                    <Card flipped={false} />
-                </div>
-            );
-        }
-    };
-
-    return (
-        <div>
-            <div className="flex mt-4 justify-content-center">
-                {closeCardsGenerator()}
-                <div className="card-stack">
-                    {openCards.map((card, idx) => (
-                        <div key={card.code + idx} className="card" style={{ zIndex: openCards.length - idx }}>
-                            <Card
-                                key={card.code}
-                                code={card.code}
-                                image={card.image}
-                                value={card.value}
-                                suit={card.suit}
-                                flipped={true} // הוספת אירוע להסרת קלף פתוח
-                            />
-                        </div>
-                    ))}
-                </div>
-            </div>
-        </div>
-    );
+/** The stock (face-down pile you draw from) and the waste next to it. */
+const Jackpot = ({ stock, hint, onDraw, onPlay }) => {
+  const closed = stock.getCloseCards().length;
+  const waste = stock.getOpenCards(); // waste[0] is the visible card
+  const empty = stock.getNumCards() === 0;
+  return (
+    <>
+      <button
+        type="button"
+        onClick={onDraw}
+        disabled={empty}
+        data-stock
+        aria-label={closed ? `Draw a card (${closed} left)` : 'Turn the waste back over'}
+        className={`relative card-size rounded-[var(--radius)] ${hint?.stock ? 'card-hint' : ''} ${
+          empty ? 'cursor-default' : 'cursor-pointer'
+        }`}
+      >
+        {closed > 0 ? (
+          <div className="card card-stock">
+            <CardBack />
+            <span className="stock-count">{closed}</span>
+          </div>
+        ) : (
+          <div className="slot absolute inset-0">
+            {!empty && <LuRotateCcw className="slot-icon" />}
+          </div>
+        )}
+      </button>
+      <div className="relative card-size" data-waste>
+        <div className="slot absolute inset-0" />
+        {waste[1] && <Card key={waste[1].code} code={waste[1].code} faceUp style={{ position: 'absolute', inset: 0 }} />}
+        {waste[0] && (
+          <Card
+            key={waste[0].code}
+            code={waste[0].code}
+            faceUp
+            onPlay={onPlay}
+            highlighted={hint?.code === waste[0].code}
+            style={{ position: 'absolute', inset: 0 }}
+          />
+        )}
+      </div>
+    </>
+  );
 };
 
 export default Jackpot;

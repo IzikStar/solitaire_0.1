@@ -1,56 +1,22 @@
-import React, { createContext, useState } from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import Home from './pages/Home';
-import Test from './components/Test'
-import './App.css';
-
-// הגדרת הקונטקסט
-export const GameContext = createContext();
+import Header from './components/Header';
+import Footer from './components/Footer';
+import Solitaire from './components/game/Solitaire';
+import { useSolitaire } from './components/game/useSolitaire';
 
 function App() {
-  const [deck, setDeck] = useState([]);
-  const [key, setKey] = useState(0);
-  const [selectedCard, setSelectedCard] = useState(null);
-  const [numOfClicks, setNumOfClicks] = useState(0);
-  const [numOfNewGame, setNumOfNewGame] = useState(0);
-  const [numOfRestarts, setNumOfRestarts] = useState(0);
-  const [currentGame, setCurrentGame] = useState(null);
-  const [BackGroundImage, setBackGroundImage] = useState(0);
-  const [isWinning, setIsWinning] = useState(false);
-  // כל הפונקציות והמצב של המשחק
-  const gameState = {
-    deck,
-    setDeck,
-    key,
-    setKey,
-    selectedCard,
-    setSelectedCard,
-    numOfClicks,
-    setNumOfClicks,
-    numOfNewGame,
-    setNumOfNewGame,
-    currentGame,
-    setCurrentGame,
-    numOfRestarts,
-    setNumOfRestarts,
-    BackGroundImage,
-    setBackGroundImage,
-    isWinning,
-    setIsWinning,
-  };
-
+  const game = useSolitaire();
   return (
-    <GameContext.Provider value={gameState}>
-      <DndProvider backend={HTML5Backend}>
-        <Router>
-          <Routes>
-            <Route path="/" element={<Home />} />
-          </Routes>
-        </Router>
-      </DndProvider>
-    </GameContext.Provider>
+    <DndProvider backend={HTML5Backend}>
+      <div className="flex min-h-screen flex-col">
+        <Header game={game} />
+        <div className="flex-1">
+          <Solitaire game={game} />
+        </div>
+        <Footer />
+      </div>
+    </DndProvider>
   );
 }
 

@@ -1,67 +1,50 @@
-import { React, useContext } from 'react';
-import Button from './basic/Button';
-import Menu from './basic/Menu';
-import Fancy3Buttons from './basic/Fancy3Buttons';
-import { GameContext } from '../App.jsx';
-import LoginForm from './LogInForm.jsx';
-import StyledBurgerMenu from './basic/StyledBurgerMenu.jsx';
-import { FaUser, FaCog, FaSignOutAlt, FaRocket  } from 'react-icons/fa'; // ייבוא אייקונים
+import { LuLightbulb, LuPlus, LuRedo2, LuRotateCcw, LuUndo2, LuVolume2, LuVolumeX } from 'react-icons/lu';
 
+const IconButton = ({ label, icon: Icon, onClick, disabled, primary, showLabel = true }) => (
+  <button
+    type="button"
+    onClick={onClick}
+    disabled={disabled}
+    title={label}
+    aria-label={label}
+    className={`btn ${primary ? 'btn-primary' : ''}`}
+  >
+    <Icon className="h-[18px] w-[18px] shrink-0" aria-hidden="true" />
+    {showLabel && <span className="hidden lg:inline">{label}</span>}
+  </button>
+);
 
-
-const Header = (props) => {
-
-    const { setSelectedCard, setNumOfClicks, setNumOfNewGame, numOfNewGame, currentGame, setCurrentGame, setNumOfRestarts, setBackGroundImage, setIsWinning } = useContext(GameContext);
-
-    const menuItems = [
-        { icon: <FaRocket  />, label: 'New game', onClick: () => fancyButtonFunction() },
-        { icon: <FaUser />, label: 'Profile', onClick: () => console.log('Profile clicked') },
-        { icon: <FaCog />, label: 'Setting', onClick: () => console.log('Settings clicked') },
-        { icon: <FaSignOutAlt />, label: 'Sign out', onClick: () => console.log('Sign out clicked') }
-    ];
-
-    const newGame = () => {
-        setIsWinning(false)
-        setNumOfClicks(0);
-        setNumOfNewGame(numOfNewGame + 1);
-        setSelectedCard(null);
-        console.log('newGame');
-    };
-
-    const newBackground = () => {
-        setBackGroundImage(prev => (prev + 1) % 10);
-    }
-
-    const fancyButtonFunction = () => {
-        newGame();
-        newBackground();
-    }
-    const restartGame = () => {
-        setIsWinning(false)
-        setNumOfRestarts(prev => prev + 1);
-    }
-
-    return (
-        <header className={`header ${props.bgClass}`}>
-            <nav className='navbar'>
-                <img src='images/logo.jpeg' alt='Logo' />
-                <Fancy3Buttons onClick={fancyButtonFunction}  text='new game' color='#1e9bff' />
-                <div className='flex w-[400px] justify-content-between' >
-                    <Button icon='undo' onClick={restartGame} />
-                    <div className='flex w-[200px] justify-content-evenly'>
-                        <Button icon='arrow-left' onClick={() => {setCurrentGame(currentGame.undo()); setIsWinning(false)}} />
-                        <Button icon='arrow-right' onClick={() => {setCurrentGame(currentGame.redo()); setIsWinning(false)}} />
-                    </div>
-                    <Button icon='lightbulb' />
-                </div>
-                <div className='w-[100px]' >
-                    <LoginForm />
-                </div>
-                <StyledBurgerMenu menuItems={menuItems} className="custom-burger-menu" />
-                {/* <Menu /> */}
-            </nav>
-        </header>
-    );
+/** Compact top bar: title, move counter and the game controls. */
+const Header = ({ game }) => {
+  const { moves, canUndo, canRedo, soundOn, state } = game;
+  return (
+    <header className="sticky top-0 z-30 border-b border-white/10 bg-emerald-950/55 backdrop-blur-md">
+      <div className="mx-auto flex h-14 max-w-[880px] items-center gap-2 px-2.5 sm:px-4">
+        <h1 className="flex items-center gap-1.5 text-lg font-semibold tracking-tight text-white">
+          <span className="text-xl leading-none text-amber-300" aria-hidden="true">
+            {'♠︎'}
+          </span>
+          <span className="hidden min-[400px]:inline sm:inline">Solitaire</span>
+        </h1>
+        <span className="ml-1 hidden rounded-full bg-white/10 px-2.5 py-0.5 text-xs tabular-nums text-emerald-50/90 sm:inline" aria-live="polite">
+          {moves} {moves === 1 ? 'move' : 'moves'}
+        </span>
+        <nav className="ml-auto flex items-center gap-1 sm:gap-1.5" aria-label="Game controls">
+          <IconButton label="New game" icon={LuPlus} onClick={game.newGame} primary />
+          <IconButton label="Undo" icon={LuUndo2} onClick={game.undo} disabled={!canUndo} />
+          <IconButton label="Redo" icon={LuRedo2} onClick={game.redo} disabled={!canRedo} />
+          <IconButton label="Restart" icon={LuRotateCcw} onClick={game.restart} disabled={!state || !canUndo} />
+          <IconButton label="Hint" icon={LuLightbulb} onClick={game.showHint} disabled={!state || game.won} />
+          <IconButton
+            label={soundOn ? 'Mute sound' : 'Turn sound on'}
+            icon={soundOn ? LuVolume2 : LuVolumeX}
+            onClick={game.toggleSound}
+            showLabel={false}
+          />
+        </nav>
+      </div>
+    </header>
+  );
 };
 
 export default Header;

@@ -1,32 +1,32 @@
-import React from 'react'
-import Card from './Card'
-import './Game.css';
+import Card from './Card';
+import { useDropZone } from './useDropZone';
 
-const FinalStack = (props) => {
+const SUITS = ['♠︎', '♥︎', '♦︎', '♣︎'];
 
-  const generateImage = (cards) => {
-    if (cards.length > 0) {
-      return (cards.map((card, idx) => (
-        <div key={card.code + idx} className="card" style={{ zIndex: idx }}>
-          <Card
-            key={card.code}
-            code={card.code}
-            image={card.image}
-            value={card.value}
-            suit={card.suit}
-            flipped={true} // הוספת אירוע להסרת קלף פתוח
-          />
-        </div>
-      )))
-    }
-    return <img src="\images\suits.webp" alt="resomething" />
-  }
-
+/** One foundation pile (plain array, last card on top). */
+const FinalStack = ({ cards, index, state, hint, onPlay, onDrop }) => {
+  const [active, dropRef] = useDropZone(state, { area: 'foundation', index }, onDrop);
+  const top = cards[cards.length - 1];
+  const below = cards[cards.length - 2];
+  const isTarget = hint?.dest?.area === 'foundation' && hint.dest.index === index;
   return (
-    <div className="card-stack">
-      {generateImage(props.cards)}
+    <div ref={dropRef} className="relative card-size" aria-label={`Foundation ${index + 1}`} data-foundation={index}>
+      <div className={`slot absolute inset-0 ${active || isTarget ? 'slot-active' : ''}`}>
+        <span className="slot-mark slot-mark-suit">{SUITS[index]}</span>
+      </div>
+      {below && <Card key={below.code} code={below.code} faceUp style={{ position: 'absolute', inset: 0 }} />}
+      {top && (
+        <Card
+          key={top.code}
+          code={top.code}
+          faceUp
+          onPlay={onPlay}
+          highlighted={hint?.code === top.code}
+          style={{ position: 'absolute', inset: 0 }}
+        />
+      )}
     </div>
-  )
-}
+  );
+};
 
-export default FinalStack
+export default FinalStack;
