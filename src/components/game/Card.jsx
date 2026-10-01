@@ -21,7 +21,7 @@ const Card = ({ image, value, suit, flipped, code }) => {
 
   // הפונקציה שמפעילה את הסאונד
   const handlePlaySound = () => {
-    playSound('/public/sounds/selectPieceSound1.wav', 
+    playSound('/sounds/selectPieceSound1.wav', 
       (song) => {
         console.log('Sound loaded and playing', song);
       }, 
