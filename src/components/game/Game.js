@@ -1,6 +1,5 @@
 import { GameState } from "./GameState";
 import { OurStack } from "./OurStack";
-import { GameContext } from '../../App.jsx';
 
 const toLog = false;
 export class Game {
@@ -25,6 +24,14 @@ export class Game {
     getCurrentState() {
         // החזרת מופע ה-Game הנוכחי
         return this.currentState;
+    }
+
+    canUndo() {
+        return this.index > 0;
+    }
+
+    canRedo() {
+        return this.index < this.history.length - 1;
     }
 
     undo() {
