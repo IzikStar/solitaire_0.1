@@ -30,7 +30,7 @@ const WinOverlay = ({ moves, onNewGame }) => {
         <h2 id="win-title" className="text-2xl font-bold text-slate-900">
           You won!
         </h2>
-        <p className="mt-1 text-slate-600">All four foundations complete in {moves} moves.</p>
+        <p className="mt-1 text-slate-600">Solved in {moves} moves.</p>
         <button type="button" onClick={onNewGame} className="btn btn-primary mt-6 w-full justify-center">
           Deal a new game
         </button>

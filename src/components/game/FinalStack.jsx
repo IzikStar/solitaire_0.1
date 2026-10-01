@@ -10,7 +10,7 @@ const FinalStack = ({ cards, index, state, hint, onPlay, onDrop }) => {
   const below = cards[cards.length - 2];
   const isTarget = hint?.dest?.area === 'foundation' && hint.dest.index === index;
   return (
-    <div ref={dropRef} className="relative card-size" aria-label={`Foundation ${index + 1}`} data-foundation={index}>
+    <div ref={dropRef} className={`relative card-size ${(active || isTarget) && top ? 'drop-target' : ''}`} aria-label={`Foundation ${index + 1}`} data-foundation={index}>
       <div className={`slot absolute inset-0 ${active || isTarget ? 'slot-active' : ''}`}>
         <span className="slot-mark slot-mark-suit">{SUITS[index]}</span>
       </div>

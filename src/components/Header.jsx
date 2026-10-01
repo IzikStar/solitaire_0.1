@@ -24,7 +24,7 @@ const Header = ({ game }) => {
           <span className="text-xl leading-none text-amber-300" aria-hidden="true">
             {'♠︎'}
           </span>
-          <span className="hidden min-[400px]:inline sm:inline">Solitaire</span>
+          <span>Solitaire</span>
         </h1>
         <span className="ml-1 hidden rounded-full bg-white/10 px-2.5 py-0.5 text-xs tabular-nums text-emerald-50/90 sm:inline" aria-live="polite">
           {moves} {moves === 1 ? 'move' : 'moves'}

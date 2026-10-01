@@ -29,7 +29,7 @@ const GameStack = ({ stack, index, state, metrics, hint, onPlay, onDrop }) => {
   return (
     <div
       ref={dropRef}
-      className="relative"
+      className={`relative ${(active || isTarget) && cards.length ? 'drop-target' : ''}`}
       style={{ width: metrics.cw, height }}
       aria-label={`Column ${index + 1}`}
     >

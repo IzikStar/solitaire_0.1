@@ -107,16 +107,15 @@ body {
   }
   .card-court {
     position: absolute;
-    inset: 24% 16% 14% 16%;
+    inset: 25% 19% 22% 19%;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     border-radius: calc(var(--radius) * 0.6);
-    background: currentColor;
+    border: 1.5px solid color-mix(in srgb, currentColor 35%, transparent);
+    background: color-mix(in srgb, currentColor 7%, transparent);
   }
-  .card-court-rank,
-  .card-court-suit { color: #fdfcf8; }
   .card-court-rank {
     font-family: Georgia, 'Times New Roman', serif;
     font-size: calc(var(--cw) * 0.36);
@@ -143,8 +142,8 @@ body {
     bottom: 5%;
     border-radius: 999px;
     background: rgb(0 0 0 / 0.45);
-    padding: 1px 6px;
-    font-size: 11px;
+    padding: 1px 5px;
+    font-size: clamp(9px, calc(var(--cw) * 0.12), 12px);
     font-weight: 600;
     color: #fff;
   }
@@ -179,7 +178,14 @@ body {
   /* ---------- hint ---------- */
   .card-hint {
     animation: hint-pulse 0.9s ease-in-out 2;
-    box-shadow: 0 0 0 3px #fcd34d, 0 0 18px 4px rgb(252 211 77 / 0.6);
+    outline: 3px solid #fcd34d;
+    outline-offset: 1px;
+    box-shadow: 0 0 18px 4px rgb(252 211 77 / 0.55);
+  }
+  .drop-target {
+    border-radius: var(--radius);
+    outline: 2px dashed #fcd34d;
+    outline-offset: 4px;
   }
 
   .toast {
