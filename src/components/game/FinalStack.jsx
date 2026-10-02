@@ -10,7 +10,7 @@ const FinalStack = ({ cards, index, state, hint, onPlay, onDrop }) => {
   return (
     <div ref={dropRef} className={`relative card-size ${(active || isTarget) && top ? 'drop-target' : ''}`} aria-label={`Foundation ${index + 1}`} data-foundation={index}>
       <div className={`slot absolute inset-0 ${active || isTarget ? 'slot-active' : ''}`}>
-        <span className="slot-mark">A</span>
+        <img className="slot-img" src="/images/suits.webp" alt="" />
       </div>
       {below && <Card key={below.code} code={below.code} faceUp style={{ position: 'absolute', inset: 0 }} />}
       {top && (

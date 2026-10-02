@@ -1,4 +1,3 @@
-import { LuRotateCcw } from 'react-icons/lu';
 import Card, { CardBack } from './Card';
 
 /** The stock (face-down pile you draw from) and the waste next to it. */
@@ -25,7 +24,7 @@ const Jackpot = ({ stock, hint, onDraw, onPlay }) => {
           </div>
         ) : (
           <div className="slot absolute inset-0">
-            {!empty && <LuRotateCcw className="slot-icon" />}
+            {!empty && <img className="slot-img" src="/images/redeal.webp" alt="" />}
           </div>
         )}
       </button>

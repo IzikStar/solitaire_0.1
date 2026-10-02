@@ -3,9 +3,10 @@ import { Game } from './Game';
 import { GameState } from './GameState';
 import { OurStack } from './OurStack';
 import { applyMove, autoMove, findHint, isLegalMove } from './moves';
-import { playSound } from '../sound';
+import { playSound, preloadSounds } from '../sound';
 
 export const STOCK_SIZE = 24;
+export const BACKGROUNDS = 10; // public/images/backGrounds/0..9.jpg
 
 const SUITS = { S: 'SPADES', H: 'HEARTS', D: 'DIAMONDS', C: 'CLUBS' };
 const VALUES = { A: 'ACE', J: 'JACK', Q: 'QUEEN', K: 'KING', 0: '10' };
@@ -57,6 +58,7 @@ export const useSolitaire = () => {
   const [status, setStatus] = useState('loading');
   const [hint, setHint] = useState(null);
   const [soundOn, setSoundOn] = useState(readSoundPref);
+  const [background, setBackground] = useState(() => Math.floor(Math.random() * BACKGROUNDS));
   const dealId = useRef(0);
   const hintTimer = useRef(null);
 
@@ -83,6 +85,7 @@ export const useSolitaire = () => {
   }, []);
 
   useEffect(() => {
+    preloadSounds();
     newGame();
     return () => clearTimeout(hintTimer.current);
   }, [newGame]);
@@ -157,7 +160,11 @@ export const useSolitaire = () => {
     canUndo: !!game?.canUndo(),
     canRedo: !!game?.canRedo(),
     moves: state?.getNumOfMove() ?? 0,
-    newGame,
+    background,
+    newGame: () => {
+      setBackground((b) => (b + 1) % BACKGROUNDS);
+      newGame();
+    },
     playCard,
     dropCard,
     draw,

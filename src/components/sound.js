@@ -1,5 +1,6 @@
-// Tiny sound helper built on HTMLAudioElement (replaces the p5.sound setup,
-// which needed p5 from a CDN and created a new p5 instance per click).
+// Small sound helper on the Web Audio API. All clips are fetched and decoded
+// up front, and each one starts at its first audible sample, so a click is
+// heard right away instead of after the <audio> element loads and buffers.
 
 const FILES = {
   select: '/sounds/selectPieceSound1.wav',
@@ -10,19 +11,70 @@ const FILES = {
   win: '/sounds/winningSound1.wav',
 };
 
-const cache = {};
+const VOLUME = { win: 0.6 };
+const SILENCE = 0.02; // amplitude below which a sample counts as silence
+
+let ctx = null;
+const clips = {}; // name -> { buffer, offset }
+
+const context = () => {
+  if (!ctx) {
+    const AudioCtx = typeof window !== 'undefined' && (window.AudioContext || window.webkitAudioContext);
+    if (!AudioCtx) return null;
+    ctx = new AudioCtx({ latencyHint: 'interactive' });
+  }
+  return ctx;
+};
+
+const firstAudible = (buffer) => {
+  const data = buffer.getChannelData(0);
+  for (let i = 0; i < data.length; i++) {
+    if (Math.abs(data[i]) > SILENCE) return i / buffer.sampleRate;
+  }
+  return 0;
+};
+
+const load = async (name) => {
+  const ac = context();
+  if (!ac) return;
+  const res = await fetch(FILES[name]);
+  const buffer = await ac.decodeAudioData(await res.arrayBuffer());
+  clips[name] = { buffer, offset: firstAudible(buffer) };
+};
+
+/** Fetch and decode every clip. Safe to call more than once. */
+let preloading = null;
+export const preloadSounds = () => {
+  preloading ??= Promise.all(Object.keys(FILES).map((n) => load(n).catch(() => {})));
+  return preloading;
+};
+
+// Browsers start an AudioContext suspended until the first user gesture.
+if (typeof window !== 'undefined') {
+  const unlock = () => {
+    context()?.resume();
+    preloadSounds();
+  };
+  window.addEventListener('pointerdown', unlock, { once: true, capture: true });
+  window.addEventListener('keydown', unlock, { once: true, capture: true });
+}
 
 export const playSound = (name) => {
-  const src = FILES[name];
-  if (!src || typeof Audio === 'undefined') return;
   try {
-    cache[name] ??= new Audio(src);
-    const audio = cache[name];
-    audio.currentTime = 0;
-    audio.volume = name === 'win' ? 0.6 : 0.4;
-    // play() rejects if the browser blocks autoplay; sound is optional
-    audio.play()?.catch(() => {});
+    const ac = context();
+    const clip = clips[name];
+    if (!ac || !clip) {
+      preloadSounds();
+      return;
+    }
+    if (ac.state === 'suspended') ac.resume();
+    const source = ac.createBufferSource();
+    const gain = ac.createGain();
+    gain.gain.value = VOLUME[name] ?? 0.4;
+    source.buffer = clip.buffer;
+    source.connect(gain).connect(ac.destination);
+    source.start(0, clip.offset);
   } catch {
-    // ignore: sound is a nice-to-have
+    // sound is a nice-to-have
   }
 };

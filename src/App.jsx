@@ -9,7 +9,10 @@ function App() {
   const game = useSolitaire();
   return (
     <DndProvider backend={HTML5Backend}>
-      <div className="flex min-h-screen flex-col">
+      <div
+        className="board-bg flex min-h-screen flex-col"
+        style={{ backgroundImage: `url(/images/backGrounds/${game.background}.jpg)` }}
+      >
         <Header game={game} />
         <div className="flex-1">
           <Solitaire game={game} />

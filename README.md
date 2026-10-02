@@ -49,9 +49,10 @@ components render.
 ## Tech stack
 
 - **React 18** and **Vite 5**
-- **Tailwind CSS** for all styling; cards are drawn with CSS, no image assets
+- **Tailwind CSS** for all styling; cards are drawn with CSS, and the board keeps the
+  original logo, neon buttons and space backgrounds (a new one with every new game)
 - **react-dnd** (HTML5 backend) for drag and drop
-- **GSAP** for the invalid-move shake and the win animation
+- **GSAP** for the invalid-move shake (the whole stack shakes) and the win animation
 - **react-icons** for the toolbar icons
 - **Deck of Cards API** for shuffling
 
@@ -61,7 +62,7 @@ components render.
 src/
   App.jsx                    top bar + board + footer
   components/Header.jsx      top bar: new game, undo, redo, restart, hint, sound
-  components/sound.js        sound effects (HTMLAudioElement)
+  components/sound.js        sound effects (Web Audio, preloaded so they play instantly)
   components/game/
     useSolitaire.js          game state hook: deal, moves, history, hint, sound
     Logic.js                 move rules (tableau and foundation validity)
@@ -74,6 +75,7 @@ src/
     FinalStack.jsx, GameStack.jsx
     WinOverlay.jsx           the "You won!" dialog
 public/
+  images/                    logo, backgrounds, empty-pile art
   sounds/                    sound effects
 ```
 
@@ -105,5 +107,5 @@ npm run preview    # serve the production build
 
 ## Credits
 
-Built together with a classmate (commits by `asaftubi`). Shuffling comes from
+Built together with Asaf Tubi (commits by `asaftubi`). Shuffling comes from
 the [Deck of Cards API](https://deckofcardsapi.com/).

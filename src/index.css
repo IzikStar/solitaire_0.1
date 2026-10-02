@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -18,14 +20,26 @@ body {
   margin: 0;
   min-height: 100%;
   background: var(--felt-3);
-  font-family: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Poppins', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 
 body {
-  background:
-    radial-gradient(120% 80% at 50% 0%, var(--felt-1) 0%, var(--felt-2) 45%, var(--felt-3) 100%) fixed;
+  background: #111316;
   overflow-x: hidden;
+}
+
+/* the board sits on one of the original background images (rotates on every new game) */
+.board-bg {
+  background-color: #111316;
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  transition: background-image 0.4s ease;
+}
+@media (max-width: 768px) {
+  /* iOS ignores fixed backgrounds; scroll is fine on a phone */
+  .board-bg { background-attachment: scroll; }
 }
 
 @layer components {
@@ -40,6 +54,89 @@ body {
   }
   @media (min-width: 1024px) {
     .btn { @apply px-3; }
+  }
+
+  /* ---------- original header controls ---------- */
+  .round-btn {
+    @apply relative inline-flex h-9 w-9 items-center justify-center overflow-hidden rounded-full text-sm text-white shadow-lg transition duration-300 ease-in-out sm:h-14 sm:w-14 sm:text-lg;
+    @apply bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 hover:shadow-2xl active:scale-95;
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-200;
+    @apply disabled:cursor-not-allowed disabled:opacity-40 disabled:active:scale-100;
+  }
+  .round-btn-glow {
+    @apply absolute inset-0 scale-0 rounded-full bg-gradient-to-r from-yellow-400 to-red-500 opacity-30 transition-transform duration-500 ease-in-out;
+  }
+  .round-btn:not(:disabled):hover .round-btn-glow { @apply scale-100; }
+
+  .neon-btn {
+    position: relative;
+    z-index: 1;
+    margin: 0 4px;
+    padding: 0.45rem 0.6rem;
+    border: 2px solid rgb(0 0 0 / 0.5);
+    border-radius: 4px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.1rem;
+    text-transform: uppercase;
+    white-space: nowrap;
+    color: var(--color);
+    text-shadow: 0 0 15px var(--color);
+    transition: 0.3s;
+  }
+  .neon-btn:hover,
+  .neon-btn:focus-visible {
+    color: #fff;
+    border-color: transparent;
+    outline: none;
+  }
+  .neon-btn:active { scale: 0.95; }
+  .neon-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: var(--color);
+    transform: scale(0);
+    transition: 0.3s;
+  }
+  .neon-btn:hover::before,
+  .neon-btn:focus-visible::before {
+    transform: scale(1);
+    transition-delay: 0.3s;
+    box-shadow: 0 0 10px var(--color), 0 0 30px var(--color), 0 0 60px var(--color);
+  }
+  .neon-btn span {
+    position: absolute;
+    border-radius: 2px;
+    background: var(--color);
+    pointer-events: none;
+    box-shadow: 0 0 10px var(--color), 0 0 20px var(--color), 0 0 30px var(--color), 0 0 50px var(--color);
+    transition: 0.5s ease-in-out;
+    transition-delay: 0.25s;
+  }
+  .neon-btn:hover span,
+  .neon-btn:focus-visible span { transform: scale(0); }
+  /* only the side lines; the original vertical ones ran off the header */
+  .neon-btn span:nth-child(1),
+  .neon-btn span:nth-child(3) { top: calc(50% - 1px); width: 28px; height: 2px; }
+  .neon-btn span:nth-child(1) { left: -38px; transform-origin: left; }
+  .neon-btn span:nth-child(3) { right: -38px; transform-origin: right; }
+  .neon-btn span:nth-child(2),
+  .neon-btn span:nth-child(4) { display: none; }
+  @media (min-width: 640px) {
+    .neon-btn { margin: 0 46px; padding: 0.75rem 1.5rem; font-size: 1rem; }
+  }
+  @media (max-width: 639px) {
+    .neon-btn span { display: none; }
+  }
+
+  .slot-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    opacity: 0.85;
+    pointer-events: none;
   }
 
   /* ---------- card geometry ---------- */
@@ -157,8 +254,8 @@ body {
     align-items: center;
     justify-content: center;
     border-radius: var(--radius);
-    border: 2px solid rgb(255 255 255 / 0.16);
-    background: rgb(0 0 0 / 0.10);
+    border: 2px solid rgb(255 255 255 / 0.28);
+    background: rgb(0 0 0 / 0.28);
     transition: border-color 120ms, background 120ms;
   }
   .slot-active {

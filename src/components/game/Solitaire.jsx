@@ -4,7 +4,7 @@ import FinalStack from './FinalStack';
 import GameStack from './GameStack';
 import WinOverlay from './WinOverlay';
 
-const HEADER_AND_FOOTER = 112; // top bar + footer + padding, in px
+const HEADER_AND_FOOTER = 132; // top bar + footer + padding, in px
 
 // Card size follows the board width (7 columns) and, on short screens, the
 // window height; long tableau columns are squeezed to fit what is left.

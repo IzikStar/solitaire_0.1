@@ -40,6 +40,16 @@ const CardFace = ({ code }) => {
 
 export const CardBack = () => <div className="card-back" aria-hidden="true" />;
 
+// Shake a card that has nowhere to go, together with the cards stacked on top
+// of it (they are its next siblings in the column).
+const shake = (el) => {
+  const group = [el];
+  for (let n = el.nextElementSibling; n; n = n.nextElementSibling) {
+    if (n.dataset.card) group.push(n);
+  }
+  gsap.fromTo(group, { x: -4 }, { x: 4, duration: 0.06, repeat: 5, yoyo: true, clearProps: 'x' });
+};
+
 /**
  * A playing card. Face-up cards are buttons (click / Enter to auto-move) and
  * can be dragged onto a column or foundation on desktop.
@@ -58,9 +68,7 @@ const Card = ({ code, faceUp, onPlay, highlighted, covered, style }) => {
 
   const play = () => {
     if (!onPlay) return;
-    if (!onPlay(code) && ref.current) {
-      gsap.fromTo(ref.current, { x: -4 }, { x: 4, duration: 0.06, repeat: 5, yoyo: true, clearProps: 'x' });
-    }
+    if (!onPlay(code) && ref.current) shake(ref.current);
   };
 
   if (!faceUp) {
