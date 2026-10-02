@@ -199,6 +199,33 @@ body {
     .neon-btn span { display: none; }
   }
 
+  /* appears once every card is face up; finishes the game */
+  .auto-btn {
+    position: fixed;
+    left: 50%;
+    bottom: calc(56px + env(safe-area-inset-bottom));
+    z-index: 35;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transform: translateX(-50%);
+    padding: 12px 22px;
+    border-radius: 999px;
+    border: 1px solid rgb(255 255 255 / 0.35);
+    background: linear-gradient(90deg, #1e9bff, #8b5cf6);
+    color: #fff;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    box-shadow: 0 0 18px rgb(30 155 255 / 0.6), 0 6px 20px rgb(0 0 0 / 0.4);
+    animation: auto-glow 1.6s ease-in-out infinite, auto-in 0.35s ease-out;
+    transition: filter 0.2s;
+  }
+  .auto-btn:hover { filter: brightness(1.12); }
+  .auto-btn:active { transform: translateX(-50%) scale(0.96); }
+  .auto-btn:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
+
   .slot-img {
     width: 100%;
     height: 100%;
@@ -361,10 +388,17 @@ body {
   }
 }
 
+@keyframes auto-glow {
+  50% { box-shadow: 0 0 30px rgb(139 92 246 / 0.85), 0 6px 20px rgb(0 0 0 / 0.4); }
+}
+@keyframes auto-in {
+  from { opacity: 0; transform: translate(-50%, 16px); }
+}
+
 @keyframes hint-pulse {
   50% { transform: translateY(-3px); }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .card-hint { animation: none; }
+  .card-hint, .auto-btn { animation: none; }
 }

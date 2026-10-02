@@ -1,8 +1,8 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Game } from './Game';
 import { GameState } from './GameState';
 import { OurStack } from './OurStack';
-import { applyMove, autoMove, findHint, isLegalMove } from './moves';
+import { applyMove, autoCompletePlan, autoMove, findHint, isLegalMove } from './moves';
 import { playSound, preloadSounds } from '../sound';
 
 export const STOCK_SIZE = 24;
@@ -61,6 +61,13 @@ export const useSolitaire = () => {
   const [background, setBackground] = useState(() => Math.floor(Math.random() * BACKGROUNDS));
   const dealId = useRef(0);
   const hintTimer = useRef(null);
+  const autoTimer = useRef(null);
+  const [autoRunning, setAutoRunning] = useState(false);
+
+  const stopAuto = () => {
+    clearTimeout(autoTimer.current);
+    setAutoRunning(false);
+  };
 
   const sound = useCallback((name) => soundOn && playSound(name), [soundOn]);
 
@@ -72,6 +79,8 @@ export const useSolitaire = () => {
   const newGame = useCallback(async () => {
     const id = ++dealId.current;
     clearHint();
+    clearTimeout(autoTimer.current);
+    setAutoRunning(false);
     setStatus('loading');
     let cards;
     try {
@@ -87,11 +96,15 @@ export const useSolitaire = () => {
   useEffect(() => {
     preloadSounds();
     newGame();
-    return () => clearTimeout(hintTimer.current);
+    return () => {
+      clearTimeout(hintTimer.current);
+      clearTimeout(autoTimer.current);
+    };
   }, [newGame]);
 
   const state = game?.getCurrentState() ?? null;
   const won = !!state?.getIsWinning();
+  const autoPlan = useMemo(() => autoCompletePlan(state), [state]);
 
   useEffect(() => {
     if (won) sound('win');
@@ -104,7 +117,7 @@ export const useSolitaire = () => {
 
   /** Click-to-move. Returns false when the card has no legal move. */
   const playCard = (code) => {
-    if (!state || won) return false;
+    if (!state || won || autoRunning) return false;
     const move = autoMove(state, code);
     if (!move) {
       sound('invalid');
@@ -116,23 +129,41 @@ export const useSolitaire = () => {
   };
 
   const dropCard = (code, dest) => {
-    if (!state || !isLegalMove(state, code, dest)) return;
+    if (!state || autoRunning || !isLegalMove(state, code, dest)) return;
     sound('select');
     commit(game.addNewMove(applyMove(state, code, dest)));
   };
 
   const draw = () => {
-    if (!state || won) return;
+    if (!state || won || autoRunning) return;
     sound('draw');
     commit(game.addNewMoveFromJackpot());
   };
 
-  const undo = () => game?.canUndo() && (sound('undo'), commit(game.undo()));
-  const redo = () => game?.canRedo() && commit(game.redo());
-  const restart = () => game && commit(game.reset());
+  const undo = () => game?.canUndo() && (stopAuto(), sound('undo'), commit(game.undo()));
+  const redo = () => game?.canRedo() && (stopAuto(), commit(game.redo()));
+  const restart = () => game && (stopAuto(), commit(game.reset()));
+
+  /** Play the finishing moves one by one so the cards fly up to the foundations. */
+  const autoComplete = () => {
+    if (!autoPlan || autoRunning) return;
+    clearHint();
+    setAutoRunning(true);
+    const steps = autoPlan;
+    const step = (i) => {
+      if (i >= steps.length) {
+        setAutoRunning(false);
+        return;
+      }
+      sound(steps[i].sound);
+      setGame((g) => g.addNewMove(steps[i].state));
+      autoTimer.current = setTimeout(() => step(i + 1), steps[i].sound === 'draw' ? 90 : 140);
+    };
+    step(0);
+  };
 
   const showHint = () => {
-    if (!state || won) return;
+    if (!state || won || autoRunning) return;
     clearTimeout(hintTimer.current);
     const h = findHint(state) ?? { none: true };
     setHint(h);
@@ -161,6 +192,8 @@ export const useSolitaire = () => {
     canRedo: !!game?.canRedo(),
     moves: state?.getNumOfMove() ?? 0,
     background,
+    canAutoComplete: !!autoPlan && !autoRunning,
+    autoComplete,
     newGame: () => {
       setBackground((b) => (b + 1) % BACKGROUNDS);
       newGame();

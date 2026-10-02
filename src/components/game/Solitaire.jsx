@@ -3,6 +3,7 @@ import Jackpot from './Jackpot';
 import FinalStack from './FinalStack';
 import GameStack from './GameStack';
 import WinOverlay from './WinOverlay';
+import { LuSparkles } from 'react-icons/lu';
 
 const HEADER_AND_FOOTER = 132; // top bar + footer + padding, in px
 
@@ -104,7 +105,13 @@ const Solitaire = ({ game }) => {
           </div>
         )}
       </div>
-      {won && status === 'ready' && <WinOverlay moves={moves} onNewGame={newGame} />}
+      {game.canAutoComplete && (
+        <button type="button" onClick={game.autoComplete} className="auto-btn">
+          <LuSparkles aria-hidden="true" />
+          Auto-finish
+        </button>
+      )}
+            {won && status === 'ready' && <WinOverlay moves={moves} onNewGame={newGame} />}
     </main>
   );
 };
