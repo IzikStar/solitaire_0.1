@@ -1,50 +1,54 @@
-import React, { useState, useEffect } from 'react';
 import Card from './Card';
+import { useDropZone } from './useDropZone';
 
-const GameStack = ({cards, name}) => {
+/** One tableau column. cards[0] is the top card; the first `open` are face up. */
+const GameStack = ({ stack, index, state, metrics, hint, onPlay, onDrop }) => {
+  const [active, dropRef] = useDropZone(state, { area: 'tableau', index }, onDrop);
+  const cards = stack.getCards();
+  const open = stack.getNumOfOpenCards();
+  const hidden = cards.length - Math.min(open, cards.length);
+  const faceUp = cards.length - hidden;
 
-    const [numOfOpenCards, setNumOfOpenCards] = useState(cards.getNumOfOpenCards());
+  // squeeze the face-up fan when a long column would not fit the screen
+  const room = metrics.tableauHeight - metrics.ch - hidden * metrics.hiddenOffset;
+  const openOffset =
+    faceUp > 1
+      ? Math.max(metrics.minOpenOffset, Math.min(metrics.openOffset, room / (faceUp - 1)))
+      : metrics.openOffset;
 
-    useEffect(() => {
-        setNumOfOpenCards(cards.getNumOfOpenCards());
-    }, [cards]);
+  let y = 0;
+  const placed = [];
+  for (let i = cards.length - 1; i >= 0; i--) {
+    const up = i < open;
+    placed.push({ card: cards[i], up, y, covered: i > 0 });
+    y += up ? openOffset : metrics.hiddenOffset;
+  }
+  const height = placed.length ? placed[placed.length - 1].y + metrics.ch : metrics.ch;
+  const isTarget = hint?.dest?.area === 'tableau' && hint.dest.index === index;
 
-
-    const generateStack = (cards, name) => {
-        const elements = [];
-        for (let i = cards.length - 1; i >= 0; i--) {
-            const card = cards[i];
-            const offsetY = 18;
-            elements.push(
-                <div
-                    key={card.code}
-                    className='absolute'
-                    style={{ 
-                        zIndex: cards.length - 1 - i,
-                        transform: `translateY(${(cards.length - 1 - i) * offsetY}px)`
-                    }}
-                >
-                    <Card
-                        key={card.code}
-                        code={card.code}
-                        index={i}
-                        stack={name}
-                        flipped={i < numOfOpenCards}
-                        image={card.image}
-                        value={card.value}
-                        suit={card.suit}
-                    />
-                </div>
-            );
-        }
-        return elements;
-    }
-    
-    return (
-        <div className='relative w-[96px] h-[128px] border-2 border-white rounded-2 my-3 mx-[26px] bg-light'>
-            {generateStack(cards.getCards(), name)}
-        </div>
-    );
-}
+  return (
+    <div
+      ref={dropRef}
+      className={`relative ${(active || isTarget) && cards.length ? 'drop-target' : ''}`}
+      style={{ width: metrics.cw, height }}
+      aria-label={`Column ${index + 1}`}
+    >
+      <div className={`slot absolute inset-x-0 top-0 ${active || isTarget ? 'slot-active' : ''}`} style={{ height: metrics.ch }}>
+        <span className="slot-mark">K</span>
+      </div>
+      {placed.map(({ card, up, y: top, covered }) => (
+        <Card
+          key={card.code}
+          code={card.code}
+          faceUp={up}
+          onPlay={onPlay}
+          highlighted={hint?.code === card.code}
+          covered={covered}
+          style={{ position: 'absolute', left: 0, top }}
+        />
+      ))}
+    </div>
+  );
+};
 
 export default GameStack;

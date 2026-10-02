@@ -1,13 +1,4 @@
-
-
-export const isValidMove = (selectedCard, toCard, isToStacks) => {
-    if (isToStacks) {
-        return isValidToStacksMove(selectedCard, toCard);
-    } else {
-        return isValidToPilesMove(selectedCard, toCard);
-    }
-}
-
+// Move rules. Cards are deck-of-cards codes: rank char + suit char ("0H" is the ten of hearts).
 export const isValidToPilesMove = (selectedCard, toCard) => {
     if (toCard === 0) return selectedCard[0] === 'A';
     return selectedCard[1] === toCard[1] && getValue(selectedCard[0]) === getValue(toCard[0]) + 1;
@@ -19,25 +10,6 @@ export const isValidToStacksMove = (selectedCard, toCard) => {
     const isBlackTo = getIsblack(toCard[1]);
     return isBlack !== isBlackTo && getValue(selectedCard[0]) + 1 === getValue(toCard[0]);
 }
-
-export const getAllIndexes = (arr, val) => {
-    const indexes = [];
-    arr.forEach((elem, index) => {
-        if (elem === val) {
-            indexes.push(index);
-        }
-    });
-    return indexes;
-};
-
-export const getRandomIndex = (arr, val) => {
-    const indexes = getAllIndexes(arr, val);
-    if (indexes.length === 0) {
-        return -1; // Return -1 if the value is not found in the array
-    }
-    const randomIndex = Math.floor(Math.random() * indexes.length);
-    return indexes[randomIndex];
-};
 
 const getIsblack = (suit) => {
     return suit === 'C' || suit === 'S';
