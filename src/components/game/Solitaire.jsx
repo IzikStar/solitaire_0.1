@@ -104,7 +104,7 @@ const Solitaire = ({ game }) => {
           </div>
         )}
       </div>
-      {won && <WinOverlay moves={moves} onNewGame={newGame} />}
+      {won && status === 'ready' && <WinOverlay moves={moves} onNewGame={newGame} />}
     </main>
   );
 };

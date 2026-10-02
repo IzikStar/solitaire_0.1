@@ -49,8 +49,9 @@ components render.
 ## Tech stack
 
 - **React 18** and **Vite 5**
-- **Tailwind CSS** for all styling; cards are drawn with CSS, and the board keeps the
-  original logo, neon buttons and space backgrounds (a new one with every new game)
+- **Tailwind CSS** for all styling; cards are drawn with CSS
+- **Generated SVG backgrounds**: a new futuristic backdrop for every game, drawn in the
+  browser from a seed, so nothing has to download
 - **react-dnd** (HTML5 backend) for drag and drop
 - **GSAP** for the invalid-move shake (the whole stack shakes) and the win animation
 - **react-icons** for the toolbar icons
@@ -63,6 +64,7 @@ src/
   App.jsx                    top bar + board + footer
   components/Header.jsx      top bar: new game, undo, redo, restart, hint, sound
   components/sound.js        sound effects (Web Audio, preloaded so they play instantly)
+  components/Backdrop.jsx    the generated SVG background
   components/game/
     useSolitaire.js          game state hook: deal, moves, history, hint, sound
     Logic.js                 move rules (tableau and foundation validity)
@@ -73,9 +75,9 @@ src/
     Solitaire.jsx            the board and its responsive card sizing
     Card.jsx, Jackpot.jsx,   card, stock/waste, foundation and tableau views
     FinalStack.jsx, GameStack.jsx
-    WinOverlay.jsx           the "You won!" dialog
+    WinOverlay.jsx           the "You won!" dialog and the card-scatter celebration
 public/
-  images/                    logo, backgrounds, empty-pile art
+  images/                    empty-pile art
   sounds/                    sound effects
 ```
 

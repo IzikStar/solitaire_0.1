@@ -6,7 +6,7 @@ import { applyMove, autoMove, findHint, isLegalMove } from './moves';
 import { playSound, preloadSounds } from '../sound';
 
 export const STOCK_SIZE = 24;
-export const BACKGROUNDS = 10; // public/images/backGrounds/0..9.jpg
+export const BACKGROUNDS = 1000; // seeds for the generated SVG backdrop
 
 const SUITS = { S: 'SPADES', H: 'HEARTS', D: 'DIAMONDS', C: 'CLUBS' };
 const VALUES = { A: 'ACE', J: 'JACK', Q: 'QUEEN', K: 'KING', 0: '10' };

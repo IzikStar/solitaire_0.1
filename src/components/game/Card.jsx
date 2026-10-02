@@ -47,7 +47,17 @@ const shake = (el) => {
   for (let n = el.nextElementSibling; n; n = n.nextElementSibling) {
     if (n.dataset.card) group.push(n);
   }
-  gsap.fromTo(group, { x: -4 }, { x: 4, duration: 0.06, repeat: 5, yoyo: true, clearProps: 'x' });
+  // Always end exactly where the cards started: stop any shake already
+  // running, start from 0, finish on 0 and then drop the inline transform.
+  gsap.killTweensOf(group);
+  gsap.set(group, { x: 0 });
+  gsap.to(group, {
+    keyframes: { x: [0, -5, 5, -4, 4, -2, 2, 0] },
+    duration: 0.4,
+    ease: 'none',
+    onComplete: () => gsap.set(group, { clearProps: 'transform' }),
+    onInterrupt: () => gsap.set(group, { clearProps: 'transform' }),
+  });
 };
 
 /**

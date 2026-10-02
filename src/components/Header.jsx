@@ -1,10 +1,9 @@
-import { FaArrowLeft, FaArrowRight, FaLightbulb, FaUndo, FaVolumeMute, FaVolumeUp } from 'react-icons/fa';
+import { LuLightbulb, LuRedo2, LuRotateCcw, LuUndo2, LuVolume2, LuVolumeX } from 'react-icons/lu';
 
-/** Round gradient icon button, the original design's control style. */
-const RoundButton = ({ label, icon: Icon, onClick, disabled }) => (
-  <button type="button" onClick={onClick} disabled={disabled} title={label} aria-label={label} className="round-btn">
-    <span className="round-btn-glow" aria-hidden="true" />
-    <Icon className="relative z-10" aria-hidden="true" />
+/** Small glass icon button for the control cluster. */
+const ControlButton = ({ label, icon: Icon, onClick, disabled }) => (
+  <button type="button" onClick={onClick} disabled={disabled} title={label} aria-label={label} className="ctl-btn">
+    <Icon aria-hidden="true" />
   </button>
 );
 
@@ -22,24 +21,32 @@ const NeonButton = ({ onClick, children }) => (
 const Header = ({ game }) => {
   const { moves, canUndo, canRedo, soundOn, state } = game;
   return (
-    <header className="sticky top-0 z-30 bg-[#0b0b0d]/95 shadow-lg shadow-black/40">
-      <div className="mx-auto flex h-16 max-w-[1100px] items-center gap-1.5 px-2.5 sm:h-[76px] sm:gap-4 sm:px-5">
-        <img src="/images/logo.jpeg" alt="Shubby Solitaire" className="h-9 w-9 rounded-md sm:h-[50px] sm:w-[50px]" />
+    <header className="hud sticky top-0 z-30">
+      <div className="mx-auto flex h-16 max-w-[1100px] items-center gap-2 px-2.5 sm:h-[72px] sm:gap-4 sm:px-5">
+        <div className="flex items-center gap-2.5">
+          <span className="hud-mark" aria-hidden="true">
+            {'♠︎'}
+          </span>
+          <span className="hud-title hidden md:inline">Solitaire</span>
+        </div>
         <NeonButton onClick={game.newGame}>New game</NeonButton>
-        <span className="hidden text-xs tabular-nums text-sky-100/70 md:inline" aria-live="polite">
-          {moves} {moves === 1 ? 'move' : 'moves'}
-        </span>
-        <nav className="ml-auto flex items-center gap-1 sm:gap-3" aria-label="Game controls">
-          <RoundButton label="Restart" icon={FaUndo} onClick={game.restart} disabled={!state || !canUndo} />
-          <RoundButton label="Undo" icon={FaArrowLeft} onClick={game.undo} disabled={!canUndo} />
-          <RoundButton label="Redo" icon={FaArrowRight} onClick={game.redo} disabled={!canRedo} />
-          <RoundButton label="Hint" icon={FaLightbulb} onClick={game.showHint} disabled={!state || game.won} />
-          <RoundButton
-            label={soundOn ? 'Mute sound' : 'Turn sound on'}
-            icon={soundOn ? FaVolumeUp : FaVolumeMute}
-            onClick={game.toggleSound}
-          />
-        </nav>
+        <div className="ml-auto flex items-center gap-2 sm:gap-3">
+          <span className="hud-moves hidden sm:inline-flex" aria-live="polite">
+            <span className="hud-moves-n">{String(moves).padStart(3, '0')}</span>
+            <span>{moves === 1 ? 'move' : 'moves'}</span>
+          </span>
+          <nav className="ctl-group" aria-label="Game controls">
+            <ControlButton label="Undo" icon={LuUndo2} onClick={game.undo} disabled={!canUndo} />
+            <ControlButton label="Redo" icon={LuRedo2} onClick={game.redo} disabled={!canRedo} />
+            <ControlButton label="Restart" icon={LuRotateCcw} onClick={game.restart} disabled={!state || !canUndo} />
+            <ControlButton label="Hint" icon={LuLightbulb} onClick={game.showHint} disabled={!state || game.won} />
+            <ControlButton
+              label={soundOn ? 'Mute sound' : 'Turn sound on'}
+              icon={soundOn ? LuVolume2 : LuVolumeX}
+              onClick={game.toggleSound}
+            />
+          </nav>
+        </div>
       </div>
     </header>
   );
