@@ -149,3 +149,54 @@ export const findHint = (state) => {
   if (state.getJackpot().getNumCards() > 0) return { stock: true };
   return null;
 };
+
+/** Turn the next stock card (same rule as Game.addNewMoveFromJackpot). */
+export const drawState = (state) => {
+  const stock = state.getJackpot();
+  return new GameState(
+    state.getStacks(),
+    state.getPiles(),
+    new OurStack(stock.getCards(), (stock.getNumOfOpenCards() + 1) % (stock.getNumOfCards() + 1)),
+    state.getNumOfMove(),
+  );
+};
+
+/**
+ * Once every tableau card is face up the game can be finished mechanically.
+ * Returns the list of states that finishes it (each one a single move or a
+ * draw), or null when auto-complete is not available yet.
+ */
+export const autoCompletePlan = (state) => {
+  if (!state || state.getIsWinning()) return null;
+  if (!state.getStacks().every((s) => s.getNumOfOpenCards() >= s.getNumCards())) return null;
+
+  const steps = [];
+  let current = state;
+  let idleDraws = 0;
+  while (!current.getIsWinning()) {
+    const waste = current.getJackpot().getOpenCards();
+    const candidates = [
+      ...(waste.length ? [waste[0].code] : []),
+      ...current.getStacks().filter((s) => s.getNumCards()).map((s) => s.getCards()[0].code),
+    ];
+    let moved = false;
+    for (const code of candidates) {
+      const dest = legalTargets(current, code).find((t) => t.area === 'foundation');
+      if (dest) {
+        current = applyMove(current, code, dest);
+        steps.push({ state: current, sound: 'select' });
+        idleDraws = 0;
+        moved = true;
+        break;
+      }
+    }
+    if (moved) continue;
+    const stockSize = current.getJackpot().getNumCards();
+    // a full pass through the stock without progress means we are stuck
+    if (stockSize === 0 || idleDraws > stockSize + 1) return null;
+    current = drawState(current);
+    steps.push({ state: current, sound: 'draw' });
+    idleDraws++;
+  }
+  return steps;
+};

@@ -29,6 +29,9 @@ components render.
 - **New game**: shuffles through the public
   [Deck of Cards API](https://deckofcardsapi.com/), with a local shuffle as a
   fallback if the API is unreachable.
+- **Auto-finish**: once every tableau card is face up, an Auto-finish button
+  plays the remaining moves (drawing from the stock when needed) one by one.
+  It only appears when a simulated run proves the game can be finished.
 - **Sound** (with a mute toggle that is remembered per browser), a move
   counter, and a short GSAP animation when you win.
 - **Responsive**: card size follows the screen, from desktop down to a 390px
@@ -103,8 +106,6 @@ npm run preview    # serve the production build
 - **The hint is a simple heuristic** (foundation moves first, then moves that
   reveal a face-down card, then the waste card, then "draw"). It does not look
   ahead, and once the stock has been cycled it can keep suggesting a draw.
-- **No auto-complete** at the end of a game; finish by clicking the remaining
-  cards up to the foundations.
 - **The game is not saved**: reloading the page deals a new game.
 
 ## Credits
